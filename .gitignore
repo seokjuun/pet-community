@@ -1,0 +1,74 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### properties ###
+src/main/resources/application-secret.properties
+
+# MacOS
+.DS_Store
+
+# 로그 파일
+*.log
+
+# 환경설정 파일
+.env
+*.env
+
+# 테스트 리포트 / 임시 파일
+*.tmp
+*.swp
+*.bak
+*.orig
+*.rej
+
+# Java Compile Artifacts
+*.class
+
+# Lombok generated code
+lombok.config
+
+# Spring Boot devtools
+.spring-boot-devtools.properties
+
+# Coverage tools (예: JaCoCo)
+*.exec
+jacoco-report/
+
+# IntelliJ / 기타 IDE에서 생길 수 있는 기타 캐시
+.idea_modules/
+.idea_config/
