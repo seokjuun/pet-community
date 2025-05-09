@@ -15,21 +15,19 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(CommentLikeId.class)
 public class CommentLike {
 
-    @Id
-    private Long userId;
-
-    @Id
-    private Long commentId;
+    @EmbeddedId
+    private CommentLikeId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id", insertable = false, updatable = false)
+    @MapsId("commentId")
+    @JoinColumn(name = "comment_id")
     private Comment comment;
 
     @CreationTimestamp
