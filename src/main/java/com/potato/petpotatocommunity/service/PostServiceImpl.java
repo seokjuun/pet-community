@@ -2,7 +2,6 @@ package com.potato.petpotatocommunity.service;
 
 import com.potato.petpotatocommunity.dto.post.PostCreateRequest;
 import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
-import com.potato.petpotatocommunity.dto.post.PostDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
 import com.potato.petpotatocommunity.entity.CommonCode;
 import com.potato.petpotatocommunity.entity.Post;
