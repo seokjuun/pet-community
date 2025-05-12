@@ -18,4 +18,6 @@ public class PostDetailResponse {
     private String hashtagName;
     private String username;
     private LocalDateTime createdAt;
+
+    private String result;
 }
