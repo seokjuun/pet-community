@@ -15,21 +15,19 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(PostLikeId.class)
 public class PostLike {
 
-    @Id
-    private Long userId;
-
-    @Id
-    private Long postId;
+    @EmbeddedId
+    private PostLikeId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", insertable = false, updatable = false)
+    @MapsId("postId")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @CreationTimestamp

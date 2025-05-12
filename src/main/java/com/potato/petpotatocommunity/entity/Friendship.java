@@ -15,20 +15,18 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(FriendshipId.class)
 public class Friendship {
 
-    @Id
-    private Long userId;
-
-    @Id
-    private Long friendId;
+    @EmbeddedId
+    private FriendshipId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("friendId")
     @JoinColumn(name = "friend_id", insertable = false, updatable = false)
     private User friend;
 
