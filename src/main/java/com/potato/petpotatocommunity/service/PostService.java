@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-
 public interface PostService {
 //    PostDetailResponse createPost(PostCreateRequest request);
 //    PostDetailResponse getPost(Long postId);
@@ -21,7 +20,7 @@ public interface PostService {
 //    Page<PostDetailResponse> getPosts(int page, int size, String keyword);
 
     PostResultDto createPost(PostCreateRequest request, List<MultipartFile> images, UserDto userDto);
-    PostResultDto getPost(Long postId);
+    PostResultDto getPost(Long postId, UserDto userDto);
     PostResultDto updatePost(Long postId, PostUpdateRequest request, List<MultipartFile> images,UserDto userDto);
     PostResultDto deletePost(Long postId, UserDto userDto);
     PostResultDto getPosts(int page, int size, String keyword);

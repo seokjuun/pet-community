@@ -4,17 +4,12 @@ import com.potato.petpotatocommunity.dto.post.PostCreateRequest;
 import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostResultDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
-import com.potato.petpotatocommunity.entity.CommonCode;
-import com.potato.petpotatocommunity.entity.Post;
-import com.potato.petpotatocommunity.entity.PostImage;
-import com.potato.petpotatocommunity.entity.User;
+import com.potato.petpotatocommunity.entity.*;
 import com.potato.petpotatocommunity.exception.PostException;
-import com.potato.petpotatocommunity.repository.CommonCodeRepository;
-import com.potato.petpotatocommunity.repository.PostImageRepository;
-import com.potato.petpotatocommunity.repository.PostRepository;
-import com.potato.petpotatocommunity.repository.UserRepository;
+import com.potato.petpotatocommunity.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +25,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -40,6 +33,8 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final CommonCodeRepository commonCodeRepository;
     private final PostImageRepository postImageRepository;
+    private final PostLikeRepository postLikeRepository;
+
 
     @Override
     public PostResultDto createPost(PostCreateRequest request, List<MultipartFile> images, UserDto userDto) {
@@ -108,7 +103,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostResultDto getPost(Long postId) {
+    public PostResultDto getPost(Long postId, UserDto user) {
         Post post = postRepository.findByIdWithUserAndHashtag(postId)
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
 
@@ -117,6 +112,10 @@ public class PostServiceImpl implements PostService {
                 .map(PostImage::getImageUrl)
                 .toList();
 
+        boolean isLiked = false;
+        if (user != null) {
+            isLiked = postLikeRepository.existsById(new PostLikeId(user.getUserId(), postId));
+        }
 
         post.setViewCount(post.getViewCount() + 1); // 조회수 증가
 
@@ -125,11 +124,12 @@ public class PostServiceImpl implements PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
-                .likeCount(post.getLikeCount())
                 .hashtagName(post.getHashtag().getCodeName())
                 .username(post.getUser().getUsername())
                 .createdAt(post.getCreatedAt())
                 .imageUrls(imageUrls)
+                .isLiked(isLiked)
+                .likeCount(post.getLikeCount())
                 .build();
 
         return PostResultDto.builder()
@@ -293,7 +293,7 @@ public class PostServiceImpl implements PostService {
                 .viewCount(post.getViewCount())
                 .likeCount(post.getPostLikes().size())
                 .createdAt(post.getCreatedAt())
-                .result("success")
+//                .result("success")
                 .build()
         );
     }

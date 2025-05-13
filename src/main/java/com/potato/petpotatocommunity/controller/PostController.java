@@ -5,6 +5,7 @@ import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostResultDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
 import com.potato.petpotatocommunity.dto.user.UserDto;
+import com.potato.petpotatocommunity.service.PostLikeService;
 import com.potato.petpotatocommunity.entity.Post;
 import com.potato.petpotatocommunity.service.PostService;
 import jakarta.servlet.http.HttpSession;
@@ -16,13 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
 
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<PostResultDto> createPost(
@@ -34,8 +35,9 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResultDto> getPost(@PathVariable Long postId) {
-        return ResponseEntity.ok(postService.getPost(postId));
+    public ResponseEntity<PostResultDto> getPost(@PathVariable Long postId ,HttpSession session) {
+        UserDto user = (UserDto) session.getAttribute("user");
+        return ResponseEntity.ok(postService.getPost(postId, user));
     }
 
     @PutMapping("/{postId}")
@@ -61,6 +63,16 @@ public class PostController {
             @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(postService.getPosts(page, size, keyword));
+    }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<String> togglePostLike(@PathVariable Long postId, HttpSession session) {
+        UserDto user = (UserDto) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+        boolean liked = postLikeService.toggleLike(postId, user.getUserId());
+        return ResponseEntity.ok(liked ? "좋아요 추가" : "좋아요 취소");
     }
 
     // 25-05-13 인기글

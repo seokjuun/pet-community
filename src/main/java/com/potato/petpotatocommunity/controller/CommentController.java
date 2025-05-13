@@ -21,14 +21,16 @@ public class CommentController {
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<CommentResultDto> getComments(@PathVariable Long postId,
-                                                       @RequestParam(required = false) Long userId) {
+                                                       HttpSession session) {
+
+        UserDto user = (UserDto) session.getAttribute("user");
         CommentResultDto resultDto = commentService.getCommentsByPostId(postId);
 
         if (resultDto.getCommentsList() != null) {
             for (var c : resultDto.getCommentsList()) {
                 c.setLikeCount(commentLikeService.countLikes(c.getCommentId()));
-                if (userId != null) {
-                    c.setLiked(commentLikeService.isLiked(c.getCommentId(), userId));
+                if (user != null) {
+                    c.setLiked(commentLikeService.isLiked(c.getCommentId(), user.getUserId()));
                 } else {
                     c.setLiked(false);
                 }
