@@ -18,8 +18,22 @@ public class CommentController {
     private final CommentLikeService commentLikeService;
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<CommentResultDto> getComments(@PathVariable Long postId) {
-        return ResponseEntity.ok(commentService.getCommentsByPostId(postId));
+    public ResponseEntity<CommentResultDto> getComments(@PathVariable Long postId,
+                                                       @RequestParam(required = false) Long userId) {
+        CommentResultDto resultDto = commentService.getCommentsByPostId(postId);
+
+        if (resultDto.getCommentsList() != null) {
+            for (var c : resultDto.getCommentsList()) {
+                c.setLikeCount(commentLikeService.countLikes(c.getCommentId()));
+                if (userId != null) {
+                    c.setLiked(commentLikeService.isLiked(c.getCommentId(), userId));
+                } else {
+                    c.setLiked(false);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(resultDto);
     }
 
     @PostMapping
