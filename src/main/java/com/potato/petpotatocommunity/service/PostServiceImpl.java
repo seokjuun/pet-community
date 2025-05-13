@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.potato.petpotatocommunity.dto.user.UserDto;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,8 +42,8 @@ public class PostServiceImpl implements PostService {
     private final PostImageRepository postImageRepository;
 
     @Override
-    public PostResultDto createPost(PostCreateRequest request, List<MultipartFile> images) {
-        User user = userRepository.findById(request.getUserId())
+    public PostResultDto createPost(PostCreateRequest request, List<MultipartFile> images, UserDto userDto) {
+        User user = userRepository.findById(userDto.getUserId())
                 .orElseThrow(() -> new PostException("존재하지 않는 사용자입니다."));
 
         CommonCode hashtag = commonCodeRepository.findById(request.getHashtagId())
@@ -139,9 +140,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostResultDto updatePost(Long postId, PostUpdateRequest request, List<MultipartFile> images) {
+    public PostResultDto updatePost(Long postId, PostUpdateRequest request, List<MultipartFile> images, UserDto userDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
+
+        if (!post.getUser().getUserId().equals(userDto.getUserId())) {
+            throw new PostException("게시글을 수정할 권한이 없습니다.");
+        }
 
         CommonCode hashtag = commonCodeRepository.findById(request.getHashtagId())
                 .orElseThrow(() -> new PostException("존재하지 않는 해시태그입니다."));
@@ -180,9 +185,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResultDto deletePost(Long postId) {
+    public PostResultDto deletePost(Long postId, UserDto userDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
+
+        if (!post.getUser().getUserId().equals(userDto.getUserId())) {
+            throw new PostException("게시글을 삭제할 권한이 없습니다.");
+        }
 
         postRepository.delete(post);
 

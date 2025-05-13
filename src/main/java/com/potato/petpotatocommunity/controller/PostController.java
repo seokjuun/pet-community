@@ -4,8 +4,10 @@ import com.potato.petpotatocommunity.dto.post.PostCreateRequest;
 import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostResultDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
+import com.potato.petpotatocommunity.dto.user.UserDto;
 import com.potato.petpotatocommunity.entity.Post;
 import com.potato.petpotatocommunity.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -26,9 +27,10 @@ public class PostController {
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<PostResultDto> createPost(
             @RequestPart("post") PostCreateRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
-
-        return ResponseEntity.ok(postService.createPost(request, images));
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpSession session) {
+        UserDto user = (com.potato.petpotatocommunity.dto.user.UserDto) session.getAttribute("user");
+        return ResponseEntity.ok(postService.createPost(request, images, user));
     }
 
     @GetMapping("/{postId}")
@@ -40,13 +42,16 @@ public class PostController {
     public ResponseEntity<PostResultDto> updatePost(
             @PathVariable Long postId,
             @RequestPart("post") PostUpdateRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
-        return ResponseEntity.ok(postService.updatePost(postId, request, images));
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpSession session) {
+        UserDto user = (UserDto) session.getAttribute("user");
+        return ResponseEntity.ok(postService.updatePost(postId, request, images, user));
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<PostResultDto> deletePost(@PathVariable Long postId) {
-        return ResponseEntity.ok(postService.deletePost(postId));
+    public ResponseEntity<PostResultDto> deletePost(@PathVariable Long postId, HttpSession session) {
+        UserDto user = (UserDto) session.getAttribute("user");
+        return ResponseEntity.ok(postService.deletePost(postId, user));
     }
 
     @GetMapping
