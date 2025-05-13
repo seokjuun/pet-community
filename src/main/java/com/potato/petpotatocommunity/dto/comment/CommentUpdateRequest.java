@@ -9,5 +9,4 @@ import lombok.*;
 @Builder
 public class CommentUpdateRequest {
     private String content;
-    private Long userId;
 }

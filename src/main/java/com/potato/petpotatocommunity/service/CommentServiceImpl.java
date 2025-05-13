@@ -6,6 +6,7 @@ import com.potato.petpotatocommunity.dto.comment.CommentDetailResponse;
 import com.potato.petpotatocommunity.dto.comment.CommentResultDto;
 import com.potato.petpotatocommunity.dto.comment.CommentUpdateRequest;
 import com.potato.petpotatocommunity.entity.Comment;
+import com.potato.petpotatocommunity.dto.user.UserDto;
 import com.potato.petpotatocommunity.entity.Post;
 import com.potato.petpotatocommunity.entity.User;
 import com.potato.petpotatocommunity.exception.CommentException;
@@ -37,11 +38,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResultDto createComment(CommentCreateRequest createRequest) {
+    public CommentResultDto createComment(CommentCreateRequest createRequest, UserDto userDto) {
         Post post = postRepository.findById(createRequest.getPostId())
                 .orElseThrow(() -> new CommentException("게시글이 존재하지 않습니다."));
 
-        User user = userRepository.findById(createRequest.getUserId())
+        User user = userRepository.findById(userDto.getUserId())
                 .orElseThrow(() -> new CommentException("사용자가 존재하지 않습니다."));
 
         Comment parent = null;
@@ -68,11 +69,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResultDto updateComment(Long commentId, CommentUpdateRequest updateRequest) {
+    public CommentResultDto updateComment(Long commentId, CommentUpdateRequest updateRequest, UserDto userDto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException("댓글이 존재하지 않습니다."));
 
-        if (!comment.getUser().getUserId().equals(updateRequest.getUserId())) {
+        if (!userDto.getUserId().equals(comment.getUser().getUserId())) {
             throw new CommentException("댓글 수정 권한이 없습니다.");
         }
 
@@ -85,11 +86,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResultDto deleteComment(Long commentId, Long userId) {
+    public CommentResultDto deleteComment(Long commentId, UserDto userDto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException("댓글이 존재하지 않습니다."));
 
-        if (!comment.getUser().getUserId().equals(userId)) {
+        if (!userDto.getUserId().equals(comment.getUser().getUserId())) {
             throw new CommentException("댓글 삭제 권한이 없습니다.");
         }
 
