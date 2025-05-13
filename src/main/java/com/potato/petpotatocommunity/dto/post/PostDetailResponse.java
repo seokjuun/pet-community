@@ -3,6 +3,7 @@ package com.potato.petpotatocommunity.dto.post;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,6 +19,5 @@ public class PostDetailResponse {
     private String hashtagName;
     private String username;
     private LocalDateTime createdAt;
-
-    private String result;
+    private List<String> imageUrls;
 }

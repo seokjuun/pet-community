@@ -2,12 +2,15 @@ package com.potato.petpotatocommunity.service;
 
 import com.potato.petpotatocommunity.dto.post.PostCreateRequest;
 import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
+import com.potato.petpotatocommunity.dto.post.PostResultDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
 import com.potato.petpotatocommunity.entity.CommonCode;
 import com.potato.petpotatocommunity.entity.Post;
+import com.potato.petpotatocommunity.entity.PostImage;
 import com.potato.petpotatocommunity.entity.User;
 import com.potato.petpotatocommunity.exception.PostException;
 import com.potato.petpotatocommunity.repository.CommonCodeRepository;
+import com.potato.petpotatocommunity.repository.PostImageRepository;
 import com.potato.petpotatocommunity.repository.PostRepository;
 import com.potato.petpotatocommunity.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -17,6 +20,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -27,9 +38,10 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommonCodeRepository commonCodeRepository;
+    private final PostImageRepository postImageRepository;
 
     @Override
-    public PostDetailResponse createPost(PostCreateRequest request) {
+    public PostResultDto createPost(PostCreateRequest request, List<MultipartFile> images) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new PostException("존재하지 않는 사용자입니다."));
 
@@ -45,31 +57,69 @@ public class PostServiceImpl implements PostService {
                 .likeCount(0)
                 .build();
 
-        Post saved = postRepository.save(post);
+        postRepository.save(post);
 
-        return PostDetailResponse.builder()
-                .postId(saved.getPostId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .viewCount(saved.getViewCount())
-                .likeCount(saved.getLikeCount())
-                .hashtagName(saved.getHashtag().getCodeName())
-                .username(saved.getUser().getUsername())
-                .createdAt(saved.getCreatedAt())
+        if (images != null && !images.isEmpty()) {
+            if (images.size() > 5) throw new PostException("이미지는 최대 5장까지 업로드 가능합니다.");
+
+            for (MultipartFile image : images) {
+                String imageUrl;
+                try {
+                    String uploadDir = System.getProperty("user.dir") + "/uploads/images";
+                    imageUrl = saveImage(image, uploadDir);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new PostException("이미지 업로드에 실패했습니다.");
+                }
+
+                PostImage postImage = PostImage.builder()
+                        .post(post)
+                        .imageUrl(imageUrl)
+                        .build();
+
+                postImageRepository.save(postImage);
+            }
+        }
+
+        return PostResultDto.builder()
                 .result("success")
                 .build();
     }
 
+    public static String saveImage(MultipartFile image, String uploadDir) throws IOException {
+
+        String originalName = image.getOriginalFilename();
+        String ext = originalName.substring(originalName.lastIndexOf("."));
+        String uuid = UUID.randomUUID().toString();
+        String newFileName = uuid + ext;
+
+        Path path = Paths.get(uploadDir);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+
+        Path filePath = path.resolve(newFileName);
+        image.transferTo(filePath.toFile());
+
+        return "/images/" + newFileName;
+    }
+
+
     @Override
     @Transactional
-    public PostDetailResponse getPost(Long postId) {
+    public PostResultDto getPost(Long postId) {
         Post post = postRepository.findByIdWithUserAndHashtag(postId)
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
 
-        post.setViewCount(post.getViewCount() + 1); // 조회수 증가
-//        Post saved = postRepository.save(post);
+        List<PostImage> images = postImageRepository.findByPost_PostId(postId);
+        List<String> imageUrls = images.stream()
+                .map(PostImage::getImageUrl)
+                .toList();
 
-        return PostDetailResponse.builder()
+
+        post.setViewCount(post.getViewCount() + 1); // 조회수 증가
+
+        PostDetailResponse response = PostDetailResponse.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -78,12 +128,18 @@ public class PostServiceImpl implements PostService {
                 .hashtagName(post.getHashtag().getCodeName())
                 .username(post.getUser().getUsername())
                 .createdAt(post.getCreatedAt())
+                .imageUrls(imageUrls)
+                .build();
+
+        return PostResultDto.builder()
+                .postDetailResponse(response)
                 .result("success")
                 .build();
     }
 
     @Override
-    public PostDetailResponse updatePost(Long postId, PostUpdateRequest request) {
+    @Transactional
+    public PostResultDto updatePost(Long postId, PostUpdateRequest request, List<MultipartFile> images) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
 
@@ -94,36 +150,49 @@ public class PostServiceImpl implements PostService {
         post.setContent(request.getContent());
         post.setHashtag(hashtag);
 
-        Post saved = postRepository.save(post);
+        postRepository.save(post);
+        postImageRepository.deleteByPost_PostId(postId);
 
-        return PostDetailResponse.builder()
-                .postId(saved.getPostId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .viewCount(saved.getViewCount())
-                .likeCount(saved.getLikeCount())
-                .hashtagName(saved.getHashtag().getCodeName())
-                .username(saved.getUser().getUsername())
-                .createdAt(saved.getCreatedAt())
+        if (images != null && !images.isEmpty()) {
+            if (images.size() > 5) throw new PostException("이미지는 최대 5장까지 업로드 가능합니다.");
+
+            for (MultipartFile image : images) {
+                try {
+                    String uploadDir = System.getProperty("user.dir") + "/uploads/images";
+                    String imageUrl = saveImage(image, uploadDir);
+
+                    PostImage postImage = PostImage.builder()
+                            .post(post)
+                            .imageUrl(imageUrl)
+                            .build();
+
+                    postImageRepository.save(postImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new PostException("이미지 업로드에 실패했습니다.");
+                }
+            }
+        }
+
+        return PostResultDto.builder()
                 .result("success")
                 .build();
     }
 
     @Override
-    public PostDetailResponse deletePost(Long postId) {
+    public PostResultDto deletePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
 
         postRepository.delete(post);
 
-        return PostDetailResponse.builder()
+        return PostResultDto.builder()
                 .result("success")
-                .title("삭제 완료")
                 .build();
     }
 
     @Override
-    public Page<PostDetailResponse> getPosts(int page, int size, String keyword) {
+    public PostResultDto getPosts(int page, int size, String keyword) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Page<Post> posts;
@@ -133,7 +202,7 @@ public class PostServiceImpl implements PostService {
             posts = postRepository.findAll(pageable);
         }
 
-        return posts.map(post -> PostDetailResponse.builder()
+        List<PostDetailResponse> postList = posts.stream().map(post -> PostDetailResponse.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -141,9 +210,13 @@ public class PostServiceImpl implements PostService {
                 .username(post.getUser().getUsername())
                 .viewCount(post.getViewCount())
                 .createdAt(post.getCreatedAt())
+                .build()).toList();
+
+        return PostResultDto.builder()
                 .result("success")
-                .build()
-        );
+                .postList(postList)
+                .count(posts.getTotalElements())
+                .build();
     }
 
     // 25-05-13 doyeon add
