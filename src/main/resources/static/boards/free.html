@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 - 펫 포테이토 커뮤니티</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #F8A5C2;
+            --secondary: #FF8FAB;
+            --light: #FFF0F5;
+            --dark: #4A4A4A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--dark);
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header-contact span {
+            margin-right: 20px;
+        }
+
+        .header-social a {
+            color: white;
+            margin-left: 15px;
+            text-decoration: none;
+        }
+
+        .header-main {
+            padding: 15px 0;
+        }
+
+        .header-main .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'Permanent Marker', cursive;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            position: relative;
+            margin-left: 30px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Board Header */
+        .board-header {
+            background-color: var(--light);
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        .board-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .board-header p {
+            color: #777;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-input {
+            display: flex;
+            width: 50%;
+        }
+
+        .search-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px 0 0 25px;
+            outline: none;
+        }
+
+        .search-input button {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+        }
+
+        /* Post List */
+        .post-list {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .post-list-header {
+            display: grid;
+            grid-template-columns: 80px 1fr 150px 120px 100px;
+            background-color: #f8f8f8;
+            padding: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post-item {
+            display: grid;
+            grid-template-columns: 80px 1fr 150px 120px 100px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .post-num {
+            text-align: center;
+        }
+
+        .post-title {
+            font-weight: 500;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .post-title:hover {
+            color: var(--primary);
+        }
+
+        .post-author, .post-date {
+            color: #777;
+            text-align: center;
+        }
+
+        .post-views {
+            text-align: center;
+        }
+
+        .post-tag {
+            display: inline-block;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #eef;
+            color: #77a;
+            margin-right: 5px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .pagination-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            border-radius: 50%;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+
+        .pagination-item:hover {
+            background-color: #eee;
+        }
+
+        .pagination-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 0;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-widget h4 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .footer-social a:hover {
+            background-color: var(--primary);
+        }
+
+        .footer-bottom {
+            background-color: rgba(0,0,0,0.2);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .write-btn-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .header-main .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-menu {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+
+            .nav-menu li {
+                margin: 0 10px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .post-list-header {
+                display: none;
+            }
+
+            .post-item {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .post-num, .post-author, .post-date, .post-views {
+                text-align: left;
+                font-size: 14px;
+                color: #777;
+            }
+
+            .post-title {
+                font-size: 18px;
+                margin: 5px 0;
+            }
+
+            .post-meta {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-top">
+        <div class="container">
+            <div class="header-contact">
+                <span><i class="fas fa-phone"></i> +82 10-1717-6288</span>
+                <span><i class="fas fa-envelope"></i> info@petpotato.com</span>
+            </div>
+            <div class="header-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="header-main">
+        <div class="container">
+            <a href="/index.html" class="logo">Pet Potato</a>
+            <ul class="nav-menu">
+                <li><a href="/index.html">홈</a></li>
+                <li><a href="/boards/free.html">자유게시판</a></li>
+                <li><a href="/boards/beauty.html">미용</a></li>
+                <li><a href="/boards/medical.html">의료</a></li>
+                <li><a href="/boards/walking.html">산책</a></li>
+            </ul>
+            <div class="auth-buttons" id="authButtons">
+                <a href="/login.html" class="btn btn-outline">로그인</a>
+                <a href="/register.html" class="btn btn-primary">회원가입</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Board Header -->
+<section class="board-header">
+    <div class="container">
+        <h1 id="board-title">자유게시판</h1>
+        <p id="board-description">반려동물에 대하여 자유롭게 이야기를 나눌 수 있는 공간입니다.</p>
+    </div>
+</section>
+
+<!-- Board Content -->
+<section class="board-content">
+    <div class="container">
+        <div class="search-bar">
+            <div class="search-input">
+                <input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+                <button id="searchButton"><i class="fas fa-search"></i> 검색</button>
+            </div>
+            <div class="write-btn-container">
+                <a href="/boards/write.html" class="btn btn-primary">글쓰기</a>
+            </div>
+        </div>
+
+        <div class="post-list">
+            <div class="post-list-header">
+                <div class="post-num">번호</div>
+                <div>제목</div>
+                <div class="post-author">작성자</div>
+                <div class="post-date">작성일</div>
+                <div class="post-views">조회수</div>
+            </div>
+            <div id="postItemsContainer">
+                <!-- Posts will be populated here by JavaScript -->
+            </div>
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be populated here by JavaScript -->
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-widget">
+                <h4>펫 포테이토</h4>
+                <p>반려동물과 함께하는 행복한 삶을 위한 커뮤니티 플랫폼입니다. 정보 공유와 소통으로 더 나은 반려생활을 만들어갑니다.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-widget">
+                <h4>게시판</h4>
+                <ul class="footer-links">
+                    <li><a href="/boards/free.html">자유게시판</a></li>
+                    <li><a href="/boards/beauty.html">미용 게시판</a></li>
+                    <li><a href="/boards/medical.html">의료 게시판</a></li>
+                    <li><a href="/boards/walking.html">산책 게시판</a></li>
+                </ul>
+            </div>
+            <div class="footer-widget">
+                <h4>고객센터</h4>
+                <ul class="footer-links">
+                    <li><a href="#">공지사항</a></li>
+                    <li><a href="#">자주 묻는 질문</a></li>
+                    <li><a href="#">문의하기</a></li>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">개인정보처리방침</a></li>
+                </ul>
+            </div>
+            <div class="footer-widget">
+                <h4>연락처</h4>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> 서울시 강남구 테헤란로 123</li>
+                    <li><i class="fas fa-phone"></i> 02-1234-5678</li>
+                    <li><i class="fas fa-envelope"></i> contact@petpotato.com</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <p>&copy; 2025 펫 포테이토 커뮤니티. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 현재 URL에서 게시판 종류 파악
+    function getBoardType() {
+        const path = window.location.pathname;
+        if (path.includes('free.html')) return { id: 'FREE', name: '자유게시판', description: '일상, 고민, 추억 등 자유롭게 이야기를 나눌 수 있는 공간입니다.' };
+        if (path.includes('beauty.html')) return { id: 'BEAUTY', name: '미용 게시판', description: '반려동물 미용과 관련된 질문, 정보, 경험을 공유하는 공간입니다.' };
+        if (path.includes('medical.html')) return { id: 'MEDICAL', name: '의료 게시판', description: '반려동물 건강과 의료 정보를 나누고 질문할 수 있는 공간입니다.' };
+        if (path.includes('walking.html')) return { id: 'WALKING', name: '산책 게시판', description: '산책 코스, 주의사항, 추천 장소 등 산책에 관한 정보를 공유합니다.' };
+        return { id: 'FREE', name: '자유 게시판', description: '펫 포테이토 커뮤니티의 모든 게시글을 확인하실 수 있습니다.' };
+    }
+
+    // 게시판 정보 설정
+    function setBoardInfo() {
+        const board = getBoardType();
+        document.getElementById('board-title').textContent = board.name;
+        document.getElementById('board-description').textContent = board.description;
+        document.title = `${board.name} - 펫 포테이토 커뮤니티`;
+    }
+
+    // 날짜 포맷팅 함수
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const isToday = date.toDateString() === now.toDateString();
+
+        if (isToday) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        } else {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+    }
+
+    // 게시글 목록 가져오기
+    async function fetchPosts(page = 0, size = 10, keyword = '') {
+        try {
+            let url = `/api/posts?page=${page}&size=${size}`;
+            if (keyword) {
+                url += `&keyword=${encodeURIComponent(keyword)}`;
+            }
+
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('게시글을 불러오는 중 오류 발생:', error);
+            return { content: [], totalPages: 0, number: 0 };
+        }
+    }
+
+    // 게시글 목록 렌더링
+    function renderPosts(posts) {
+        const container = document.getElementById('postItemsContainer');
+        container.innerHTML = '';
+
+        if (posts.length === 0) {
+            container.innerHTML = '<div class="post-item" style="text-align: center;">게시글이 없습니다.</div>';
+            return;
+        }
+
+        posts.forEach((post, index) => {
+            const postElement = document.createElement('div');
+            postElement.className = 'post-item';
+
+            // 모바일용 레이아웃
+            if (window.innerWidth <= 768) {
+                postElement.innerHTML = `
+                    <div class="post-title-wrapper">
+                        <a href="/boards/view.html?id=${post.postId}" class="post-title">${post.title}</a>
+                        <span class="post-tag">${post.hashtagName}</span>
+                    </div>
+                    <div class="post-meta">
+                        <span class="post-author"><i class="fas fa-user"></i> ${post.username}</span>
+                        <span class="post-date"><i class="fas fa-clock"></i> ${formatDate(post.createdAt)}</span>
+                        <span class="post-views"><i class="fas fa-eye"></i> ${post.viewCount}</span>
+                    </div>
+                `;
+            } else {
+                // 데스크톱용 레이아웃
+                postElement.innerHTML = `
+                    <div class="post-num">${post.postId}</div>
+                    <div>
+                        <a href="/boards/view.html?id=${post.postId}" class="post-title">${post.title}</a>
+                        <span class="post-tag">${post.hashtagName}</span>
+                    </div>
+                    <div class="post-author">${post.username}</div>
+                    <div class="post-date">${formatDate(post.createdAt)}</div>
+                    <div class="post-views">${post.viewCount}</div>
+                `;
+            }
+
+            container.appendChild(postElement);
+        });
+    }
+
+    // 페이지네이션 렌더링
+    function renderPagination(currentPage, totalPages) {
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = '';
+
+        // 처음 페이지로 가기
+        if (currentPage > 2) {
+            const firstPage = document.createElement('a');
+            firstPage.href = '#';
+            firstPage.className = 'pagination-item';
+            firstPage.innerHTML = '<i class="fas fa-angle-double-left"></i>';
+            firstPage.onclick = (e) => {
+                e.preventDefault();
+                loadPage(0);
+            };
+            paginationContainer.appendChild(firstPage);
+        }
+
+        // 이전 페이지로 가기
+        if (currentPage > 0) {
+            const prevPage = document.createElement('a');
+            prevPage.href = '#';
+            prevPage.className = 'pagination-item';
+            prevPage.innerHTML = '<i class="fas fa-angle-left"></i>';
+            prevPage.onclick = (e) => {
+                e.preventDefault();
+                loadPage(currentPage - 1);
+            };
+            paginationContainer.appendChild(prevPage);
+        }
+
+        // 페이지 번호
+        const startPage = Math.max(0, currentPage - 2);
+        const endPage = Math.min(totalPages - 1, currentPage + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageLink = document.createElement('a');
+            pageLink.href = '#';
+            pageLink.className = 'pagination-item' + (i === currentPage ? ' active' : '');
+            pageLink.textContent = i + 1;
+            pageLink.onclick = (e) => {
+                e.preventDefault();
+                loadPage(i);
+            };
+            paginationContainer.appendChild(pageLink);
+        }
+
+        // 다음 페이지로 가기
+        if (currentPage < totalPages - 1) {
+            const nextPage = document.createElement('a');
+            nextPage.href = '#';
+            nextPage.className = 'pagination-item';
+            nextPage.innerHTML = '<i class="fas fa-angle-right"></i>';
+            nextPage.onclick = (e) => {
+                e.preventDefault();
+                loadPage(currentPage + 1);
+            };
+            paginationContainer.appendChild(nextPage);
+        }
+
+        // 마지막 페이지로 가기
+        if (currentPage < totalPages - 3) {
+            const lastPage = document.createElement('a');
+            lastPage.href = '#';
+            lastPage.className = 'pagination-item';
+            lastPage.innerHTML = '<i class="fas fa-angle-double-right"></i>';
+            lastPage.onclick = (e) => {
+                e.preventDefault();
+                loadPage(totalPages - 1);
+            };
+            paginationContainer.appendChild(lastPage);
+        }
+    }
+
+    // 페이지 로드
+    async function loadPage(page = 0) {
+        const searchInput = document.getElementById('searchInput');
+        const keyword = searchInput.value.trim();
+
+        const data = await fetchPosts(page, 10, keyword);
+
+        if (data && data.content) {
+            renderPosts(data.content);
+            renderPagination(data.number, data.totalPages);
+
+            // URL 파라미터 업데이트
+            const params = new URLSearchParams(window.location.search);
+            params.set('page', page);
+            if (keyword) {
+                params.set('keyword', keyword);
+            } else {
+                params.delete('keyword');
+            }
+
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.history.pushState({ page }, '', newUrl);
+
+            // 페이지 최상단으로 스크롤
+            window.scrollTo(0, 0);
+        }
+    }
+
+    // 검색 기능
+    function setupSearch() {
+        const searchButton = document.getElementById('searchButton');
+        const searchInput = document.getElementById('searchInput');
+
+        // URL에서 검색어 가져오기
+        const params = new URLSearchParams(window.location.search);
+        const keyword = params.get('keyword');
+        if (keyword) {
+            searchInput.value = keyword;
+        }
+
+        // 검색 버튼 클릭
+        searchButton.addEventListener('click', () => {
+            loadPage(0);
+        });
+
+        // 엔터키 검색
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                loadPage(0);
+            }
+        });
+    }
+
+    // 인증 상태에 따라 버튼 변경
+    async function updateAuthButtons() {
+        try {
+            const response = await fetch('/auth/me');
+            if (!response.ok) return;
+
+            const user = await response.json();
+            const authButtons = document.getElementById('authButtons');
+
+            if (user && user.userId) {
+                authButtons.innerHTML = `
+                    <span style="margin-right: 10px;">${user.nickname || user.username}님</span>
+                    <a href="/mypage.html" class="btn btn-outline">마이페이지</a>
+                    <button onclick="logout()" class="btn btn-primary">로그아웃</button>
+                `;
+            }
+        } catch (error) {
+            console.error('인증 상태 확인 오류:', error);
+        }
+    }
+
+    // 로그아웃 함수
+    async function logout() {
+        try {
+            const response = await fetch('/auth/logout', {
+                method: 'POST'
+            });
+
+            const result = await response.text();
+            if (result === 'logout success') {
+                alert('로그아웃 되었습니다.');
+                window.location.href = '/index.html';
+            }
+        } catch (error) {
+            console.error('로그아웃 오류:', error);
+        }
+    }
+
+    // 초기화
+    document.addEventListener('DOMContentLoaded', async () => {
+        setBoardInfo();
+        setupSearch();
+        updateAuthButtons();
+
+        // URL 파라미터에서 페이지 정보 가져오기
+        const params = new URLSearchParams(window.location.search);
+        const page = parseInt(params.get('page')) || 0;
+
+        await loadPage(page);
+
+        // 브라우저 뒤로가기/앞으로가기 처리
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.page !== undefined) {
+                loadPage(event.state.page);
+            } else {
+                loadPage(0);
+            }
+        });
+    });
+</script>
+</body>
+</html>

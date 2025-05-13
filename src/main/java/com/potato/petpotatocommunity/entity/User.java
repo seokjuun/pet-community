@@ -1,6 +1,7 @@
 package com.potato.petpotatocommunity.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,6 +31,7 @@ public class User {
     private String password;
 
     @Column(nullable = false, length = 50)
+    @NotNull
     private String nickname;
 
     @ManyToOne(fetch = FetchType.LAZY)
