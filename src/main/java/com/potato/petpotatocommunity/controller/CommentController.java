@@ -1,9 +1,9 @@
 package com.potato.petpotatocommunity.controller;
 
 import com.potato.petpotatocommunity.dto.comment.CommentCreateRequest;
-import com.potato.petpotatocommunity.dto.comment.CommentLikeResultDto;
 import com.potato.petpotatocommunity.dto.comment.CommentResultDto;
 import com.potato.petpotatocommunity.dto.comment.CommentUpdateRequest;
+import com.potato.petpotatocommunity.dto.comment.CommentLikeResultDto;
 import com.potato.petpotatocommunity.service.CommentLikeService;
 import com.potato.petpotatocommunity.service.CommentService;
 import lombok.RequiredArgsConstructor;
