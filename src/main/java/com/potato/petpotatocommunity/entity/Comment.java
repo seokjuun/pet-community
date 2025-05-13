@@ -37,8 +37,6 @@ public class Comment {
 
     private Boolean isDeleted = false;
 
-    private int likeCount;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 

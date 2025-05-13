@@ -1,5 +1,6 @@
 package com.potato.petpotatocommunity.exception;
 
+import com.potato.petpotatocommunity.dto.comment.CommentDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,9 +19,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(
                 PostDetailResponse.builder()
                         .result("fail")
-                        .title(e.getMessage())
+                        .content(e.getMessage())
                         .build()
         );
     }
 
+    @ExceptionHandler(CommentException.class)
+    public ResponseEntity<CommentDetailResponse> handleCommentException(PostException e) {
+        return ResponseEntity.badRequest().body(
+                CommentDetailResponse.builder()
+                        .content(e.getMessage())
+                        .build()
+        );
+    }
 }
