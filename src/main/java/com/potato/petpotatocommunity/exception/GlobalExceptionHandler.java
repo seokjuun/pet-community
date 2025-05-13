@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,5 +55,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다: " + e.getMessage());
     }
+  
+    //    @ExceptionHandler(PostException.class)
+//    public ResponseEntity<String> handlePostException(PostException e) {
+//        return ResponseEntity.badRequest().body(e.getMessage());
+//    }
+
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<PostDetailResponse> handlePostException(PostException e) {
+        return ResponseEntity.badRequest().body(
+                PostDetailResponse.builder()
+                        .result("fail")
+                        .title(e.getMessage())
+                        .build()
+        );
+    }
+
 }
 
