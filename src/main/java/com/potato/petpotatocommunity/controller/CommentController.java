@@ -21,7 +21,7 @@ public class CommentController {
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<CommentResultDto> getComments(@PathVariable Long postId,
-                                                       HttpSession session) {
+                                                        HttpSession session) {
 
         UserDto user = (UserDto) session.getAttribute("user");
         CommentResultDto resultDto = commentService.getCommentsByPostId(postId);
@@ -87,18 +87,4 @@ public class CommentController {
         return ResponseEntity.ok(resultDto);
     }
 
-    @PostMapping("/{commentId}/like")
-    public ResponseEntity<CommentLikeResultDto> toggleLike(@PathVariable Long commentId,
-                                             @RequestParam Long userId) {
-        boolean liked = commentLikeService.toggleLike(commentId, userId);
-        CommentLikeResultDto resultDto = new CommentLikeResultDto();
-
-        if (liked) {
-            resultDto.setResult("좋아요 추가");
-        } else {
-            resultDto.setResult("좋아요 취소");
-        }
-
-        return ResponseEntity.ok(resultDto);
-    }
 }
