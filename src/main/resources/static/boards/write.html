@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>글 작성 - 펫 포테이토 커뮤니티</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #F8A5C2;
+      --secondary: #FF8FAB;
+      --light: #FFF0F5;
+      --dark: #4A4A4A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      color: var(--dark);
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Header */
+    header {
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-top {
+      background-color: var(--primary);
+      color: white;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    .header-top .container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .header-contact span {
+      margin-right: 20px;
+    }
+
+    .header-social a {
+      color: white;
+      margin-left: 15px;
+      text-decoration: none;
+    }
+
+    .header-main {
+      padding: 15px 0;
+    }
+
+    .header-main .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 24px;
+      color: var(--primary);
+      text-decoration: none;
+      font-family: 'Permanent Marker', cursive;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-menu li {
+      position: relative;
+      margin-left: 30px;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-menu a:hover {
+      color: var(--primary);
+    }
+
+    .auth-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 8px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary);
+    }
+
+    /* Page Header */
+    .page-header {
+      background-color: var(--light);
+      padding: 30px 0;
+      margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      color: #777;
+    }
+
+    /* Form */
+    .form-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(248, 165, 194, 0.2);
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23666"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 12px;
+    }
+
+    textarea.form-control {
+      min-height: 300px;
+      resize: vertical;
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark);
+      color: white;
+      padding: 60px 0 0;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .footer-widget h4 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      color: white;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .footer-social a:hover {
+      background-color: var(--primary);
+    }
+
+    .footer-bottom {
+      background-color: rgba(0,0,0,0.2);
+      padding: 20px 0;
+      text-align: center;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    /* Loader */
+    .loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.7);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(248, 165, 194, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .header-main .container {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .nav-menu {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        justify-content: center;
+      }
+
+      .nav-menu li {
+        margin: 0 10px;
+      }
+
+      .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .form-buttons .btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+  <div class="header-top">
+    <div class="container">
+      <div class="header-contact">
+        <span><i class="fas fa-phone"></i> +82 10-1717-6288</span>
+        <span><i class="fas fa-envelope"></i> info@petpotato.com</span>
+      </div>
+      <div class="header-social">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="header-main">
+    <div class="container">
+      <a href="/index.html" class="logo">Pet Potato</a>
+      <ul class="nav-menu">
+        <li><a href="/index.html">홈</a></li>
+        <li><a href="/boards/free.html">자유게시판</a></li>
+        <li><a href="/boards/beauty.html">미용</a></li>
+        <li><a href="/boards/medical.html">의료</a></li>
+        <li><a href="/boards/walking.html">산책</a></li>
+      </ul>
+      <div class="auth-buttons" id="authButtons">
+        <a href="/login.html" class="btn btn-outline">로그인</a>
+        <a href="/register.html" class="btn btn-primary">회원가입</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <h1 id="form-title">글 작성</h1>
+    <p>펫 포테이토 커뮤니티에 새로운 글을 작성해보세요.</p>
+  </div>
+</section>
+
+<!-- Form Content -->
+<section class="form-content">
+  <div class="container">
+    <div class="form-container">
+      <form id="postForm">
+        <div class="form-group">
+          <label for="hashtagId">카테고리</label>
+          <select id="hashtagId" name="hashtagId" class="form-control" required>
+            <option value="">카테고리를 선택하세요</option>
+            <option value="POST_FREE">자유</option>
+            <option value="POST_BEAUTY">미용</option>
+            <option value="POST_MEDICAL">의료</option>
+            <option value="POST_WALKING">산책</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="title">제목</label>
+          <input type="text" id="title" name="title" class="form-control" placeholder="제목을 입력하세요" required>
+        </div>
+        <div class="form-group">
+          <label for="content">내용</label>
+          <textarea id="content" name="content" class="form-control" placeholder="내용을 입력하세요" required></textarea>
+        </div>
+        <div class="form-buttons">
+          <a href="#" onclick="goBack()" class="btn btn-outline">취소</a>
+          <button type="submit" class="btn btn-primary">등록하기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="loader-spinner"></div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-widget">
+        <h4>펫 포테이토</h4>
+        <p>반려동물과 함께하는 행복한 삶을 위한 커뮤니티 플랫폼입니다. 정보 공유와 소통으로 더 나은 반려생활을 만들어갑니다.</p>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-widget">
+        <h4>게시판</h4>
+        <ul class="footer-links">
+          <li><a href="/boards/free.html">자유게시판</a></li>
+          <li><a href="/boards/beauty.html">미용 게시판</a></li>
+          <li><a href="/boards/medical.html">의료 게시판</a></li>
+          <li><a href="/boards/walking.html">산책 게시판</a></li>
+        </ul>
+      </div>
+      <div class="footer-widget">
+        <h4>고객센터</h4>
+        <ul class="footer-links">
+          <li><a href="#">공지사항</a></li>
+          <li><a href="#">자주 묻는 질문</a></li>
+          <li><a href="#">문의하기</a></li>
+          <li><a href="#">이용약관</a></li>
+          <li><a href="#">개인정보처리방침</a></li>
+        </ul>
+      </div>
+      <div class="footer-widget">
+        <h4>연락처</h4>
+        <ul class="footer-links">
+          <li><i class="fas fa-map-marker-alt"></i> 서울시 강남구 테헤란로 123</li>
+          <li><i class="fas fa-phone"></i> 02-1234-5678</li>
+          <li><i class="fas fa-envelope"></i> contact@petpotato.com</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; 2025 펫 포테이토 커뮤니티. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 현재 로그인한 사용자 정보
+  let currentUser = null;
+
+  // 폼 모드 (create 또는 update)
+  let formMode = 'create';
+
+  // 현재 편집 중인 게시글 ID (수정 모드일 때)
+  let currentPostId = null;
+
+  // 게시글 원본 작성자 (수정 모드일 때)
+  let originalAuthorId = null;
+
+  // URL 파라미터에서 게시판 유형 가져오기
+  function getBoardTypeFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('board') || 'FREE';
+  }
+
+  // URL 파라미터에서 게시글 ID 가져오기 (수정 모드일 때)
+  function getPostIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+  }
+
+  // 로딩 표시
+  function showLoader() {
+    document.getElementById('loader').style.display = 'flex';
+  }
+
+  function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+  }
+
+  // 이전 페이지로 돌아가기
+  function goBack() {
+    window.history.back();
+  }
+
+  // 현재 사용자 정보 가져오기
+  async function fetchCurrentUser() {
+    try {
+      const response = await fetch('/auth/me');
+      if (!response.ok) {
+        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+        return null;
+      }
+
+      const user = await response.json();
+      return user;
+    } catch (error) {
+      console.error('사용자 정보 가져오기 오류:', error);
+      alert('로그인 정보를 확인할 수 없습니다. 다시 로그인해주세요.');
+      window.location.href = '/login.html';
+      return null;
+    }
+  }
+
+  // 게시글 상세 정보 가져오기 (수정 모드일 때)
+  async function fetchPostDetail(postId) {
+    try {
+      showLoader();
+      const response = await fetch(`/api/posts/${postId}`);
+      if (!response.ok) {
+        throw new Error('게시글을 불러올 수 없습니다.');
+      }
+
+      const post = await response.json();
+      return post;
+    } catch (error) {
+      console.error('게시글 정보 가져오기 오류:', error);
+      alert('게시글을 불러올 수 없습니다.');
+      window.location.href = '/boards/free.html';
+      return null;
+    } finally {
+      hideLoader();
+    }
+  }
+
+  // 폼 초기화 (새 글 작성 모드)
+  function initCreateForm() {
+    document.getElementById('form-title').textContent = '글 작성';
+    document.getElementById('postForm').reset();
+
+    // 게시판 유형에 따라 카테고리 기본값 설정
+    const boardType = getBoardTypeFromUrl();
+    document.getElementById('hashtagId').value = boardType;
+
+    formMode = 'create';
+  }
+
+  // 폼 초기화 (수정 모드)
+  function initUpdateForm(post) {
+    document.getElementById('form-title').textContent = '글 수정';
+    document.getElementById('hashtagId').value = post.hashtagName;
+    document.getElementById('title').value = post.title;
+    document.getElementById('content').value = post.content;
+
+    formMode = 'update';
+    currentPostId = post.postId;
+
+    // 사용자가 수정 권한이 있는지 확인 (작성자 또는 관리자)
+    if (currentUser && (currentUser.userId === originalAuthorId || currentUser.roleId === 'ROLE_MANAGER')) {
+      // 수정 권한 있음
+    } else {
+      alert('이 게시글을 수정할 권한이 없습니다.');
+      window.location.href = `/boards/view.html?id=${post.postId}`;
+    }
+  }
+
+  // 게시글 생성
+  async function createPost(formData) {
+    try {
+      showLoader();
+
+      const postData = {
+        userId: currentUser.userId,
+        hashtagId: formData.get('hashtagId'),
+        title: formData.get('title'),
+        content: formData.get('content')
+      };
+
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postData)
+      });
+
+      if (!response.ok) {
+        throw new Error('게시글 등록 실패');
+      }
+
+      const result = await response.json();
+
+      alert('게시글이 등록되었습니다.');
+      window.location.href = `/boards/view.html?id=${result.postId}`;
+    } catch (error) {
+      console.error('게시글 등록 오류:', error);
+      alert('게시글 등록 중 오류가 발생했습니다.');
+    } finally {
+      hideLoader();
+    }
+  }
+
+  // 게시글 수정
+  async function updatePost(formData) {
+    try {
+      showLoader();
+
+      const postData = {
+        title: formData.get('title'),
+        content: formData.get('content'),
+        hashtagId: formData.get('hashtagId')
+      };
+
+      const response = await fetch(`/api/posts/${currentPostId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postData)
+      });
+
+      if (!response.ok) {
+        throw new Error('게시글 수정 실패');
+      }
+
+      const result = await response.json();
+
+      alert('게시글이 수정되었습니다.');
+      window.location.href = `/boards/view.html?id=${result.postId}`;
+    } catch (error) {
+      console.error('게시글 수정 오류:', error);
+      alert('게시글 수정 중 오류가 발생했습니다.');
+    } finally {
+      hideLoader();
+    }
+  }
+
+  // 인증 상태에 따라 버튼 변경
+  function updateAuthButtons(user) {
+    if (!user) return;
+
+    const authButtons = document.getElementById('authButtons');
+    authButtons.innerHTML = `
+            <span style="margin-right: 10px;">${user.nickname || user.username}님</span>
+            <a href="/mypage.html" class="btn btn-outline">마이페이지</a>
+            <button onclick="logout()" class="btn btn-primary">로그아웃</button>
+        `;
+  }
+
+  // 로그아웃 함수
+  async function logout() {
+    try {
+      const response = await fetch('/auth/logout', {
+        method: 'POST'
+      });
+
+      const result = await response.text();
+      if (result === 'logout success') {
+        alert('로그아웃 되었습니다.');
+        window.location.href = '/index.html';
+      }
+    } catch (error) {
+      console.error('로그아웃 오류:', error);
+    }
+  }
+
+  // 초기화
+  document.addEventListener('DOMContentLoaded', async () => {
+    // 현재 사용자 정보 가져오기
+    currentUser = await fetchCurrentUser();
+    if (!currentUser) return;
+
+    updateAuthButtons(currentUser);
+
+    // 폼 모드 결정 (새 글 작성 또는 수정)
+    const postId = getPostIdFromUrl();
+
+    if (postId) {
+      // 수정 모드
+      const post = await fetchPostDetail(postId);
+      if (post) {
+        originalAuthorId = post.userId; // 원본 작성자 ID 저장
+        initUpdateForm(post);
+      }
+    } else {
+      // 새 글 작성 모드
+      initCreateForm();
+    }
+
+    // 폼 제출 이벤트 처리
+    document.getElementById('postForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+
+      if (formMode === 'create') {
+        await createPost(formData);
+      } else {
+        await updatePost(formData);
+      }
+    });
+  });
+</script>
+</body>
+</html>
