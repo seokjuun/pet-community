@@ -3,11 +3,14 @@ package com.potato.petpotatocommunity.controller;
 import com.potato.petpotatocommunity.dto.post.PostCreateRequest;
 import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
+import com.potato.petpotatocommunity.entity.Post;
 import com.potato.petpotatocommunity.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -47,4 +50,28 @@ public class PostController {
     ) {
         return ResponseEntity.ok(postService.getPosts(page, size, keyword));
     }
+
+    // 25-05-13 인기글
+//    @GetMapping("/popular")
+//    public ResponseEntity<List<Post>> getPopularPosts(@RequestParam(defaultValue = "10") int limit) {
+//        List<Post> popularPosts = postService.getPopularPosts(limit);
+//        return ResponseEntity.ok(popularPosts);
+//    }
+    @GetMapping("/popular")
+    public ResponseEntity<Page<PostDetailResponse>> getPopularPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size
+    ) {
+        return ResponseEntity.ok(postService.getPopularPosts(page, size));
+    }
+
+    @GetMapping("/popular/hashtag/{hashtagId}")
+    public ResponseEntity<Page<PostDetailResponse>> getPopularPostsByHashtag(
+            @PathVariable String hashtagId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size
+    ) {
+        return ResponseEntity.ok(postService.getPopularPostsByHashtag(hashtagId, page, size));
+    }
+
 }

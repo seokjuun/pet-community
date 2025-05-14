@@ -67,7 +67,80 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @EntityGraph(attributePaths = {"user", "hashtag"})
     Page<Post> findAll(Pageable pageable);
-  
-  
-    
+
+    // 25-05-13 doyeon add ( 인기게시글 )
+//    @Query("SELECT p FROM Post p LEFT JOIN PostLike pl ON p.id = pl.post.id GROUP BY p.id ORDER BY COUNT(pl) DESC")
+//    List<Post> findTopPostsByLikes(Pageable pageable);
+//    @EntityGraph(attributePaths = {"user", "hashtag"})
+//    @Query("SELECT p FROM Post p ORDER BY p.likeCount DESC, p.viewCount DESC")
+//    Page<Post> findPopularPosts(Pageable pageable);
+//
+//    @EntityGraph(attributePaths = {"user", "hashtag"})
+//    @Query("SELECT p FROM Post p WHERE p.hashtag.codeId = :hashtagId ORDER BY p.likeCount DESC, p.viewCount DESC")
+//    Page<Post> findPopularPostsByHashtag(@Param("hashtagId") String hashtagId, Pageable pageable);
+    @Query(value = """
+        SELECT p.*
+        FROM posts p
+        LEFT JOIN post_likes pl ON p.post_id = pl.post_id
+        WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
+        GROUP BY p.post_id
+        ORDER BY COUNT(pl.post_id) DESC, p.created_at DESC
+        """,
+            countQuery = """
+        SELECT COUNT(*) FROM (
+            SELECT p.post_id
+            FROM posts p
+            LEFT JOIN post_likes pl ON p.post_id = pl.post_id
+            WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
+            GROUP BY p.post_id
+        ) AS count_sub
+        """,
+            nativeQuery = true)
+    Page<Post> findPopularPostsInLast48Hours(Pageable pageable);
+
+
+    @Query(value = """
+        SELECT p.*
+        FROM posts p
+        LEFT JOIN post_likes pl ON p.post_id = pl.post_id
+        JOIN hashtag h ON p.hashtag_id = h.hashtag_id
+        WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
+          AND h.code_id = :hashtagId
+        GROUP BY p.post_id
+        ORDER BY COUNT(pl.post_id) DESC, p.created_at DESC
+        """,
+            countQuery = """
+        SELECT COUNT(*) FROM (
+            SELECT p.post_id
+            FROM posts p
+            LEFT JOIN post_likes pl ON p.post_id = pl.post_id
+            JOIN hashtag h ON p.hashtag_id = h.hashtag_id
+            WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
+              AND h.code_id = :hashtagId
+            GROUP BY p.post_id
+        ) AS count_sub
+        """,
+            nativeQuery = true)
+    Page<Post> findPopularPostsByHashtagInLast48Hours(@Param("hashtagId") String hashtagId, Pageable pageable);
+
+//    @EntityGraph(attributePaths = {"user", "hashtag", "postLikes"})
+//    @Query(value = """
+//        SELECT p
+//        FROM Post p
+//        WHERE p.createdAt >= FUNCTION('DATE_SUB', CURRENT_TIMESTAMP, FUNCTION('INTERVAL', 48, 'HOUR'))
+//        ORDER BY SIZE(p.postLikes) DESC, p.createdAt DESC
+//        """)
+//    Page<Post> findPopularPostsInLast48Hours(Pageable pageable);
+//
+//    @EntityGraph(attributePaths = {"user", "hashtag", "postLikes"})
+//    @Query(value = """
+//        SELECT p
+//        FROM Post p
+//        WHERE p.createdAt >= FUNCTION('DATE_SUB', CURRENT_TIMESTAMP, FUNCTION('INTERVAL', 48, 'HOUR'))
+//        AND p.hashtag.codeId = :hashtagId
+//        ORDER BY SIZE(p.postLikes) DESC, p.createdAt DESC
+//        """)
+//    Page<Post> findPopularPostsByHashtagInLast48Hours(@Param("hashtagId") String hashtagId, Pageable pageable);
+
+
 }

@@ -6,6 +6,9 @@
     <title>펫 포테이토 커뮤니티</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -98,6 +101,7 @@
         .nav-menu a {
             text-decoration: none;
             color: var(--dark);
+            /*font-family: "Jua", sans-serif;*/
             font-weight: 500;
             transition: color 0.3s;
         }
@@ -280,6 +284,7 @@
             transform: translateY(-5px);
         }
 
+        /* i class 사용시 */
         .board-image {
             height: 180px;
             background-color: #eee;
@@ -289,6 +294,41 @@
             font-size: 30px;
             color: var(--primary);
         }
+
+        .board-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* image 사용시 */
+        /*.board-image {*/
+        /*    height: 180px;*/
+        /*    background-color: #f8f8f8; !* 배경색을 약간 밝게 변경 *!*/
+        /*    display: flex;*/
+        /*    align-items: center;*/
+        /*    justify-content: center;*/
+        /*    font-size: 30px;*/
+        /*    color: var(--primary);*/
+        /*    background-size: cover;*/
+        /*    background-position: center;*/
+        /*    border-radius: 8px 8px 0 0; !* 상단 모서리 둥글게 처리 *!*/
+        /*    position: relative;*/
+        /*    overflow: hidden;*/
+        /*}*/
+
+        /*!* 이미지 위에 약간의 어두운 오버레이를 추가하여 텍스트 가독성 향상 *!*/
+        /*.board-image::after {*/
+        /*    content: '';*/
+        /*    position: absolute;*/
+        /*    top: 0;*/
+        /*    left: 0;*/
+        /*    width: 100%;*/
+        /*    height: 100%;*/
+        /*    background: rgba(0, 0, 0, 0.2);*/
+        /*    z-index: 1;*/
+        /*}*/
 
         .board-content {
             padding: 20px;
@@ -531,7 +571,9 @@
         <div class="boards-grid">
             <div class="board-card">
                 <div class="board-image">
-                    <i class="fas fa-comments"></i>
+<!--                    <i class="fas fa-comments"></i>-->
+<!--                    <div class="board-image" style="background-image: url('/assets/image/blog-large.jpg');">-->
+                    <img src="/assets/image/blog-large.jpg" alt="자유게시판 이미지" />
                 </div>
                 <div class="board-content">
                     <h3>자유게시판</h3>
@@ -541,7 +583,8 @@
             </div>
             <div class="board-card">
                 <div class="board-image">
-                    <i class="fas fa-cut"></i>
+<!--                    <i class="fas fa-cut"></i>-->
+                    <img src="/assets/image/puppy.jpg" alt="미용게시판 이미지" />
                 </div>
                 <div class="board-content">
                     <h3>미용 게시판</h3>
@@ -551,7 +594,8 @@
             </div>
             <div class="board-card">
                 <div class="board-image">
-                    <i class="fas fa-stethoscope"></i>
+<!--                    <i class="fas fa-stethoscope"></i>-->
+                    <img src="/assets/image/medi.jpg" alt="의료게시판 이미지" />
                 </div>
                 <div class="board-content">
                     <h3>의료 게시판</h3>
@@ -561,7 +605,8 @@
             </div>
             <div class="board-card">
                 <div class="board-image">
-                    <i class="fas fa-paw"></i>
+<!--                    <i class="fas fa-paw"></i>-->
+                    <img src="/assets/image/insta4.jpg" alt="산책게시판 이미지" />
                 </div>
                 <div class="board-content">
                     <h3>산책 게시판</h3>
@@ -580,63 +625,63 @@
             <h2>인기 게시글</h2>
             <p>회원들이 많이 읽고 관심을 가진 인기 게시글을 확인해보세요</p>
         </div>
-        <div class="posts-list">
-            <div class="post-item">
-                <div class="post-stats">
-                    <div class="post-views">128</div>
-                    <div class="post-likes">좋아요 24</div>
-                </div>
-                <div class="post-content">
-                    <h3>강아지 겨울철 피부관리, 이것만 알면 된다!</h3>
-                    <div class="post-meta">
-                        <span><i class="fas fa-user"></i> 멍멍이맘</span>
-                        <span><i class="fas fa-folder"></i> 미용</span>
-                        <span><i class="fas fa-clock"></i> 3일 전</span>
-                    </div>
-                </div>
-            </div>
-            <div class="post-item">
-                <div class="post-stats">
-                    <div class="post-views">114</div>
-                    <div class="post-likes">좋아요 21</div>
-                </div>
-                <div class="post-content">
-                    <h3>우리 동네 숨은 반려동물 친화 카페 추천합니다</h3>
-                    <div class="post-meta">
-                        <span><i class="fas fa-user"></i> 행복한고양이</span>
-                        <span><i class="fas fa-folder"></i> 자유</span>
-                        <span><i class="fas fa-clock"></i> 5일 전</span>
-                    </div>
-                </div>
-            </div>
-            <div class="post-item">
-                <div class="post-stats">
-                    <div class="post-views">98</div>
-                    <div class="post-likes">좋아요 18</div>
-                </div>
-                <div class="post-content">
-                    <h3>강아지 예방접종 시기와 종류, 알아두세요!</h3>
-                    <div class="post-meta">
-                        <span><i class="fas fa-user"></i> 바론파파</span>
-                        <span><i class="fas fa-folder"></i> 의료</span>
-                        <span><i class="fas fa-clock"></i> 1주일 전</span>
-                    </div>
-                </div>
-            </div>
-            <div class="post-item">
-                <div class="post-stats">
-                    <div class="post-views">85</div>
-                    <div class="post-likes">좋아요 16</div>
-                </div>
-                <div class="post-content">
-                    <h3>한강공원 애견 산책로 시설 확충! 이제 더 편하게 산책하세요</h3>
-                    <div class="post-meta">
-                        <span><i class="fas fa-user"></i> 산책러버</span>
-                        <span><i class="fas fa-folder"></i> 산책</span>
-                        <span><i class="fas fa-clock"></i> 1주일 전</span>
-                    </div>
-                </div>
-            </div>
+        <div class="posts-list" id="popular-posts-list">
+<!--            <div class="post-item">-->
+<!--                <div class="post-stats">-->
+<!--                    <div class="post-views">128</div>-->
+<!--                    <div class="post-likes">좋아요 24</div>-->
+<!--                </div>-->
+<!--                <div class="post-content">-->
+<!--                    <h3>강아지 겨울철 피부관리, 이것만 알면 된다!</h3>-->
+<!--                    <div class="post-meta">-->
+<!--                        <span><i class="fas fa-user"></i> 멍멍이맘</span>-->
+<!--                        <span><i class="fas fa-folder"></i> 미용</span>-->
+<!--                        <span><i class="fas fa-clock"></i> 3일 전</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="post-item">-->
+<!--                <div class="post-stats">-->
+<!--                    <div class="post-views">114</div>-->
+<!--                    <div class="post-likes">좋아요 21</div>-->
+<!--                </div>-->
+<!--                <div class="post-content">-->
+<!--                    <h3>우리 동네 숨은 반려동물 친화 카페 추천합니다</h3>-->
+<!--                    <div class="post-meta">-->
+<!--                        <span><i class="fas fa-user"></i> 행복한고양이</span>-->
+<!--                        <span><i class="fas fa-folder"></i> 자유</span>-->
+<!--                        <span><i class="fas fa-clock"></i> 5일 전</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="post-item">-->
+<!--                <div class="post-stats">-->
+<!--                    <div class="post-views">98</div>-->
+<!--                    <div class="post-likes">좋아요 18</div>-->
+<!--                </div>-->
+<!--                <div class="post-content">-->
+<!--                    <h3>강아지 예방접종 시기와 종류, 알아두세요!</h3>-->
+<!--                    <div class="post-meta">-->
+<!--                        <span><i class="fas fa-user"></i> 바론파파</span>-->
+<!--                        <span><i class="fas fa-folder"></i> 의료</span>-->
+<!--                        <span><i class="fas fa-clock"></i> 1주일 전</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="post-item">-->
+<!--                <div class="post-stats">-->
+<!--                    <div class="post-views">85</div>-->
+<!--                    <div class="post-likes">좋아요 16</div>-->
+<!--                </div>-->
+<!--                <div class="post-content">-->
+<!--                    <h3>한강공원 애견 산책로 시설 확충! 이제 더 편하게 산책하세요</h3>-->
+<!--                    <div class="post-meta">-->
+<!--                        <span><i class="fas fa-user"></i> 산책러버</span>-->
+<!--                        <span><i class="fas fa-folder"></i> 산책</span>-->
+<!--                        <span><i class="fas fa-clock"></i> 1주일 전</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
 </section>
@@ -731,6 +776,166 @@
             .catch(error => {
                 console.error('로그아웃 오류:', error);
             });
+    }
+
+    // 인기 게시글 불러오기 함수
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     fetch("/api/posts/popular?limit=4")
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             const container = document.getElementById("popular-posts-list");
+    //
+    //             data.forEach(post => {
+    //                 const item = document.createElement("div");
+    //                 item.className = "post-item";
+    //                 item.innerHTML = `
+    //                 <div class="post-stats">
+    //                     <div class="post-views">${post.viewCount}</div>
+    //                     <div class="post-likes">좋아요 ${post.likeCount}</div>
+    //                 </div>
+    //                 <div class="post-content">
+    //                     <h3>${post.title}</h3>
+    //                     <div class="post-meta">
+    //                         <span><i class="fas fa-user"></i> ${post.username}</span>
+    //                         <span><i class="fas fa-folder"></i> ${post.hashtagName}</span>
+    //                         <span><i class="fas fa-clock"></i> ${timeSince(post.createdAt)}</span>
+    //                     </div>
+    //                 </div>
+    //             `;
+    //                 container.appendChild(item);
+    //             });
+    //         })
+    //         .catch(error => {
+    //             console.error("인기 게시글 불러오기 실패:", error);
+    //         });
+    //
+    //     // 시간 경과 텍스트 함수 (예: "3일 전")
+    //     function timeSince(dateString) {
+    //         const date = new Date(dateString);
+    //         const now = new Date();
+    //         const diffMs = now - date;
+    //         const diffSec = Math.floor(diffMs / 1000);
+    //         const diffMin = Math.floor(diffSec / 60);
+    //         const diffHour = Math.floor(diffMin / 60);
+    //         const diffDay = Math.floor(diffHour / 24);
+    //
+    //         if (diffDay > 0) return `${diffDay}일 전`;
+    //         if (diffHour > 0) return `${diffHour}시간 전`;
+    //         if (diffMin > 0) return `${diffMin}분 전`;
+    //         return "방금 전";
+    //     }
+    // });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load popular posts when page loads
+        loadPopularPosts();
+    });
+
+    function loadPopularPosts() {
+        fetch('/api/posts/popular?page=0&size=4')
+            .then(response => response.json())
+            .then(data => {
+                const postsListContainer = document.querySelector('.posts-list');
+
+                // Clear existing content
+                postsListContainer.innerHTML = '';
+
+                // Check if there are posts
+                if (data.content && data.content.length > 0) {
+                    // Loop through posts and create HTML elements
+                    data.content.forEach(post => {
+                        const postElement = createPostElement(post);
+                        postsListContainer.appendChild(postElement);
+                    });
+                } else {
+                    postsListContainer.innerHTML = '<div class="no-posts">인기 게시글이 없습니다.</div>';
+                }
+            })
+            .catch(error => {
+                console.error('인기 게시글을 불러오는 중 오류가 발생했습니다:', error);
+                const postsListContainer = document.querySelector('.posts-list');
+                postsListContainer.innerHTML = '<div class="no-posts">게시글을 불러오는 중 오류가 발생했습니다.</div>';
+            });
+    }
+
+    function createPostElement(post) {
+        // Format date
+        const createdDate = new Date(post.createdAt);
+        const now = new Date();
+        const diffTime = Math.abs(now - createdDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let timeAgo;
+        if (diffDays === 0) {
+            timeAgo = '오늘';
+        } else if (diffDays === 1) {
+            timeAgo = '어제';
+        } else if (diffDays < 7) {
+            timeAgo = diffDays + '일 전';
+        } else if (diffDays < 30) {
+            timeAgo = Math.floor(diffDays / 7) + '주 전';
+        } else {
+            timeAgo = Math.floor(diffDays / 30) + '달 전';
+        }
+
+        // Create post item container
+        const postItem = document.createElement('div');
+        postItem.className = 'post-item';
+        postItem.setAttribute('data-post-id', post.postId);
+
+        // Post stats (likes and views)
+        const postStats = document.createElement('div');
+        postStats.className = 'post-stats';
+
+        const postViews = document.createElement('div');
+        postViews.className = 'post-views';
+        postViews.textContent = post.viewCount;
+
+        const postLikes = document.createElement('div');
+        postLikes.className = 'post-likes';
+        postLikes.innerHTML = '<i class="fas fa-heart"></i> ' + post.likeCount;
+
+        postStats.appendChild(postViews);
+        postStats.appendChild(postLikes);
+
+        // Post content
+        const postContent = document.createElement('div');
+        postContent.className = 'post-content';
+
+        const postTitle = document.createElement('h3');
+        postTitle.textContent = post.title;
+
+        const postMeta = document.createElement('div');
+        postMeta.className = 'post-meta';
+
+        // Username
+        const username = document.createElement('span');
+        username.innerHTML = `<i class="fas fa-user"></i> ${post.username}`;
+
+        // Hashtag
+        const hashtag = document.createElement('span');
+        hashtag.innerHTML = `<i class="fas fa-folder"></i> ${post.hashtagName}`;
+
+        // Time
+        const time = document.createElement('span');
+        time.innerHTML = `<i class="fas fa-clock"></i> ${timeAgo}`;
+
+        postMeta.appendChild(username);
+        postMeta.appendChild(hashtag);
+        postMeta.appendChild(time);
+
+        postContent.appendChild(postTitle);
+        postContent.appendChild(postMeta);
+
+        // Add click event to navigate to post details
+        postItem.addEventListener('click', function() {
+            window.location.href = `/post.html?id=${post.postId}`;
+        });
+
+        // Append elements to post item
+        postItem.appendChild(postStats);
+        postItem.appendChild(postContent);
+
+        return postItem;
     }
 </script>
 </body>
