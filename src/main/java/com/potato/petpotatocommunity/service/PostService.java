@@ -28,6 +28,6 @@ public interface PostService {
 
     // 25-05-13 doyoen add
 //    List<Post> getPopularPosts(int limit);
-    Page<PostDetailResponse> getPopularPosts(int page, int size);
-    Page<PostDetailResponse> getPopularPostsByHashtag(String hashtagId, int page, int size);
+    PostResultDto getPopularPosts(int page, int size);
+    PostResultDto getPopularPostsByHashtag(String hashtagId, int page, int size);
 }

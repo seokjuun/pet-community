@@ -826,7 +826,6 @@
     //     }
     // });
     document.addEventListener('DOMContentLoaded', function() {
-        // Load popular posts when page loads
         loadPopularPosts();
     });
 
@@ -835,14 +834,10 @@
             .then(response => response.json())
             .then(data => {
                 const postsListContainer = document.querySelector('.posts-list');
-
-                // Clear existing content
                 postsListContainer.innerHTML = '';
 
-                // Check if there are posts
-                if (data.content && data.content.length > 0) {
-                    // Loop through posts and create HTML elements
-                    data.content.forEach(post => {
+                if (data.postList && data.postList.length > 0) {
+                    data.postList.forEach(post => {
                         const postElement = createPostElement(post);
                         postsListContainer.appendChild(postElement);
                     });

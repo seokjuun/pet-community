@@ -1,16 +1,13 @@
 package com.potato.petpotatocommunity.controller;
 
 import com.potato.petpotatocommunity.dto.post.PostCreateRequest;
-import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostResultDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
 import com.potato.petpotatocommunity.dto.user.UserDto;
 import com.potato.petpotatocommunity.service.PostLikeService;
-import com.potato.petpotatocommunity.entity.Post;
 import com.potato.petpotatocommunity.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -82,7 +79,7 @@ public class PostController {
 //        return ResponseEntity.ok(popularPosts);
 //    }
     @GetMapping("/popular")
-    public ResponseEntity<Page<PostDetailResponse>> getPopularPosts(
+    public ResponseEntity<PostResultDto> getPopularPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size
     ) {
@@ -90,7 +87,7 @@ public class PostController {
     }
 
     @GetMapping("/popular/hashtag/{hashtagId}")
-    public ResponseEntity<Page<PostDetailResponse>> getPopularPostsByHashtag(
+    public ResponseEntity<PostResultDto> getPopularPostsByHashtag(
             @PathVariable String hashtagId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size

@@ -236,23 +236,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Page<PostDetailResponse> getPopularPosts(int page, int size) {
+    public PostResultDto getPopularPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> posts = postRepository.findPopularPostsInLast48Hours(pageable);
 
-        // Using eager initialization to prevent "no session" errors
         posts.forEach(post -> {
-            // Touch hashtag to initialize
-            if (post.getHashtag() != null) {
-                post.getHashtag().getCodeName();
-            }
-            // Touch user to initialize
-            if (post.getUser() != null) {
-                post.getUser().getUsername();
-            }
+            if (post.getHashtag() != null) post.getHashtag().getCodeName();
+            if (post.getUser() != null) post.getUser().getUsername();
         });
 
-        return posts.map(post -> PostDetailResponse.builder()
+        List<PostDetailResponse> postList = posts.stream().map(post -> PostDetailResponse.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -261,30 +254,27 @@ public class PostServiceImpl implements PostService {
                 .viewCount(post.getViewCount())
                 .likeCount(post.getPostLikes().size())
                 .createdAt(post.getCreatedAt())
+                .build()).toList();
+
+        return PostResultDto.builder()
                 .result("success")
-                .build()
-        );
+                .postList(postList)
+                .count(posts.getTotalElements())
+                .build();
     }
 
     @Override
     @Transactional
-    public Page<PostDetailResponse> getPopularPostsByHashtag(String hashtagId, int page, int size) {
+    public PostResultDto getPopularPostsByHashtag(String hashtagId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> posts = postRepository.findPopularPostsByHashtagInLast48Hours(hashtagId, pageable);
 
-        // Using eager initialization to prevent "no session" errors
         posts.forEach(post -> {
-            // Touch hashtag to initialize
-            if (post.getHashtag() != null) {
-                post.getHashtag().getCodeName();
-            }
-            // Touch user to initialize
-            if (post.getUser() != null) {
-                post.getUser().getUsername();
-            }
+            if (post.getHashtag() != null) post.getHashtag().getCodeName();
+            if (post.getUser() != null) post.getUser().getUsername();
         });
 
-        return posts.map(post -> PostDetailResponse.builder()
+        List<PostDetailResponse> postList = posts.stream().map(post -> PostDetailResponse.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -293,9 +283,13 @@ public class PostServiceImpl implements PostService {
                 .viewCount(post.getViewCount())
                 .likeCount(post.getPostLikes().size())
                 .createdAt(post.getCreatedAt())
-//                .result("success")
-                .build()
-        );
+                .build()).toList();
+
+        return PostResultDto.builder()
+                .result("success")
+                .postList(postList)
+                .count(posts.getTotalElements())
+                .build();
     }
 
 }
