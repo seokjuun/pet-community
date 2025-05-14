@@ -47,4 +47,20 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
     long countByUserUserId(Long userId);
 
+    @Query("""
+        SELECT new com.potato.petpotatocommunity.dto.comment.CommentDetailResponse(
+            c.commentId,
+            c.content,
+            u.username,
+            (SELECT COUNT(cl) FROM CommentLike cl WHERE cl.comment.commentId = c.commentId),
+            c.isDeleted,
+            c.parentComment.commentId,
+            c.createdAt,
+            false
+        )
+        FROM Comment c
+        JOIN c.user u
+        WHERE c.post.postId = :postId
+        """)
+    List<CommentDetailResponse> findAllByPostId(@Param("postId") Long postId);
 }

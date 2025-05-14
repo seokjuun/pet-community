@@ -68,7 +68,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<PostDetailResponse> handlePostException(PostException e) {
         return ResponseEntity.badRequest().body(
                 PostDetailResponse.builder()
-                        .result("fail")
                         .content(e.getMessage())
                         .build()
         );
@@ -82,5 +81,6 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
 }
 

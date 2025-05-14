@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PostCreateRequest {
-    private Long userId;
+//    private Long userId;
     private String hashtagId;
     private String title;
     private String content;
