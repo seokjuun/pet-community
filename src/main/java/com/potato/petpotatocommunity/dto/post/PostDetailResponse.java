@@ -20,5 +20,5 @@ public class PostDetailResponse {
     private LocalDateTime createdAt;
     private List<String> imageUrls;
     private boolean isLiked;
-    private int likeCount;
+    private Long likeCount;
 }

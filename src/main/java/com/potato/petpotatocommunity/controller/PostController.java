@@ -1,6 +1,7 @@
 package com.potato.petpotatocommunity.controller;
 
 import com.potato.petpotatocommunity.dto.post.PostCreateRequest;
+import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostResultDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
 import com.potato.petpotatocommunity.dto.user.UserDto;
@@ -34,7 +35,19 @@ public class PostController {
     @GetMapping("/{postId}")
     public ResponseEntity<PostResultDto> getPost(@PathVariable Long postId ,HttpSession session) {
         UserDto user = (UserDto) session.getAttribute("user");
-        return ResponseEntity.ok(postService.getPost(postId, user));
+        PostResultDto resultDto = postService.getPost(postId,user);
+        PostDetailResponse detailResponse = resultDto.getPostDetailResponse();
+
+        if (detailResponse != null){
+            detailResponse.setLikeCount(postLikeService.getLikeCount(detailResponse.getPostId()));
+            if (user != null){
+                detailResponse.setLiked(postLikeService.isLiked(detailResponse.getPostId(), user.getUserId()));
+            } else {
+                detailResponse.setLiked(false);
+            }
+        }
+
+        return ResponseEntity.ok(resultDto);
     }
 
     @PutMapping("/{postId}")
