@@ -50,7 +50,7 @@ public class PostServiceImpl implements PostService {
                 .title(request.getTitle())
                 .content(request.getContent())
                 .viewCount(0)
-                .likeCount(0)
+//                .likeCount(0)
                 .build();
 
         postRepository.save(post);
@@ -112,11 +112,6 @@ public class PostServiceImpl implements PostService {
                 .map(PostImage::getImageUrl)
                 .toList();
 
-        boolean isLiked = false;
-        if (user != null) {
-            isLiked = postLikeRepository.existsById(new PostLikeId(user.getUserId(), postId));
-        }
-
         post.setViewCount(post.getViewCount() + 1); // 조회수 증가
 
         PostDetailResponse response = PostDetailResponse.builder()
@@ -128,8 +123,8 @@ public class PostServiceImpl implements PostService {
                 .username(post.getUser().getUsername())
                 .createdAt(post.getCreatedAt())
                 .imageUrls(imageUrls)
-                .isLiked(isLiked)
-                .likeCount(post.getLikeCount())
+//                .isLiked(isLiked)
+//                .likeCount(post.getLikeCount())
                 .build();
 
         return PostResultDto.builder()
@@ -252,7 +247,8 @@ public class PostServiceImpl implements PostService {
                 .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "Unknown")
                 .username(post.getUser() != null ? post.getUser().getUsername() : "Unknown")
                 .viewCount(post.getViewCount())
-                .likeCount(post.getPostLikes().size())
+//                .likeCount(post.getPostLikes().size())
+                .likeCount((long) (post.getPostLikes() != null ? post.getPostLikes().size() : 0))
                 .createdAt(post.getCreatedAt())
                 .build()).toList();
 
@@ -281,7 +277,8 @@ public class PostServiceImpl implements PostService {
                 .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "Unknown")
                 .username(post.getUser() != null ? post.getUser().getUsername() : "Unknown")
                 .viewCount(post.getViewCount())
-                .likeCount(post.getPostLikes().size())
+//                .likeCount(post.getPostLikes().size())
+                .likeCount((long) (post.getPostLikes() != null ? post.getPostLikes().size() : 0))
                 .createdAt(post.getCreatedAt())
                 .build()).toList();
 

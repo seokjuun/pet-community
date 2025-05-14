@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PostLikeServiceImpl implements PostLikeService {
@@ -23,12 +25,13 @@ public class PostLikeServiceImpl implements PostLikeService {
 
     @Override
     public boolean isLiked(Long postId, Long userId) {
-        return postLikeRepository.existsById(new com.potato.petpotatocommunity.entity.PostLikeId(userId, postId));
+        return postLikeRepository.existsByUser_UserIdAndPost_PostId(userId, postId);
+
     }
 
     @Override
-    public int getLikeCount(Long postId) {
-        return (int) postLikeRepository.countByPost_PostId(postId);
+    public long getLikeCount(Long postId) {
+        return postLikeRepository.countByPost_PostId(postId);
     }
 
     @Override
@@ -38,16 +41,18 @@ public class PostLikeServiceImpl implements PostLikeService {
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new PostException("존재하지 않는 사용자입니다."));
-        PostLikeId id = new PostLikeId(userId, postId);
 
-        if (postLikeRepository.existsById(id)) {
-            postLikeRepository.deleteById(id);
-            post.setLikeCount(post.getLikeCount() - 1);
+        Optional<PostLike> existing = postLikeRepository.findByUser_UserIdAndPost_PostId(userId, postId);
+        if (existing.isPresent()) {
+            postLikeRepository.delete(existing.get());
             return false;
         } else {
-            PostLike like = new PostLike(id, user, post, null);
+            PostLike like = PostLike.builder()
+                    .post(post)
+                    .user(user)
+                    .id(new PostLikeId(user.getUserId(), post.getPostId()))
+                    .build();
             postLikeRepository.save(like);
-            post.setLikeCount(post.getLikeCount() + 1);
             return true;
         }
     }
