@@ -28,12 +28,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         """)
     List<CommentDetailResponse> findAllByPostId(@Param("postId") Long postId);
 
+
+    // 댓글별로 좋아요 카운트 쿼리 확인하는거 삭제
+    // 기존 : (SELECT COUNT(cl) FROM CommentLike cl WHERE cl.comment.commentId = c.commentId),
     @Query("""
         SELECT new com.potato.petpotatocommunity.dto.comment.CommentDetailResponse(
             c.commentId,
             c.content,
             u.username,
-            (SELECT COUNT(cl) FROM CommentLike cl WHERE cl.comment.commentId = c.commentId),
+            0L,
             c.isDeleted,
             c.parentComment.commentId,
             c.createdAt,
