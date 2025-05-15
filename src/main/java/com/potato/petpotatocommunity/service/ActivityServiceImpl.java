@@ -31,7 +31,7 @@ public class ActivityServiceImpl implements ActivityService {
                         .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "기타")
                         .viewCount(post.getViewCount())
 //                        .likeCount(post.getLikeCount())
-                        .likeCount(post.getPostLikes() != null ? post.getPostLikes().size() : 0)
+                        //.likeCount(post.getPostLikes() != null ? post.getPostLikes().size() : 0)
                         .commentCount(post.getComments() != null ? post.getComments().size() : 0)
                         .createdAt(post.getCreatedAt())
                         .build())
