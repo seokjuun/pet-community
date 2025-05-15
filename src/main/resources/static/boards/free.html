@@ -125,6 +125,22 @@
             color: #77a;
             margin-right: 5px;
         }
+        .post-tag.tag-general {
+            background-color: #e7f3ff;
+            color: #2a6f97;
+        }
+        .post-tag.tag-grooming {
+            background-color: #fff0f5;
+            color: #d63384;
+        }
+        .post-tag.tag-hospital {
+            background-color: #f0fff4;
+            color: #2f9e44;
+        }
+        .post-tag.tag-walk {
+            background-color: #fffbe6;
+            color: #f08c00;
+        }
 
         /* Pagination */
         .pagination {
@@ -251,8 +267,8 @@
 <!-- Board Header -->
 <section class="board-header">
     <div class="container">
-        <h1 id="board-title">자유게시판</h1>
-        <p id="board-description">반려동물에 대하여 자유롭게 이야기를 나눌 수 있는 공간입니다.</p>
+        <h1 id="board-title">게시판</h1>
+        <p id="board-description">펫 포테이토 커뮤니티의 게시글을 볼 수 있습니다.</p>
     </div>
 </section>
 
@@ -268,7 +284,17 @@
                 <a href="/boards/write.html" class="btn btn-primary">글쓰기</a>
             </div>
         </div>
-
+        <br>
+        <!-- 카테고리 필터 버튼 -->
+        <div class="btn-group filter-buttons mb-3" role="group">
+            <button class="btn btn-outline-primary" data-category="POPULAR">🔥인기글</button>
+            <button class="btn btn-outline-primary" data-category="ALL">전체</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_GENERAL">자유</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_GROOMING">미용</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_HOSPITAL">의료</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_WALK">산책</button>
+        </div>
+        <br>
         <div class="post-list">
             <div class="post-list-header">
                 <div class="post-num">번호</div>
@@ -277,311 +303,141 @@
                 <div class="post-date">작성일</div>
                 <div class="post-views">조회수</div>
             </div>
-            <div id="postItemsContainer">
-                <!-- Posts will be populated here by JavaScript -->
-            </div>
+            <div id="postItemsContainer"></div>
         </div>
 
-        <div class="pagination" id="pagination">
-            <!-- Pagination will be populated here by JavaScript -->
-        </div>
+        <div class="pagination" id="pagination"></div>
     </div>
 </section>
 
-<!-- Footer -->
-<footer>
-    <div class="footer-bottom">
-        <div class="container">
-            <p>&copy; 2025 펫 포테이토 커뮤니티. All Rights Reserved.</p>
-        </div>
-    </div>
-</footer>
 <script>
-    // 현재 URL에서 게시판 종류 파악
-    function getBoardType() {
-        const path = window.location.pathname;
-        if (path.includes('free.html')) return { id: 'FREE', name: '자유게시판', description: '일상, 고민, 추억 등 자유롭게 이야기를 나눌 수 있는 공간입니다.' };
-        if (path.includes('beauty.html')) return { id: 'BEAUTY', name: '미용 게시판', description: '반려동물 미용과 관련된 질문, 정보, 경험을 공유하는 공간입니다.' };
-        if (path.includes('medical.html')) return { id: 'MEDICAL', name: '의료 게시판', description: '반려동물 건강과 의료 정보를 나누고 질문할 수 있는 공간입니다.' };
-        if (path.includes('walking.html')) return { id: 'WALKING', name: '산책 게시판', description: '산책 코스, 주의사항, 추천 장소 등 산책에 관한 정보를 공유합니다.' };
-        return { id: 'FREE', name: '자유 게시판', description: '펫 포테이토 커뮤니티의 모든 게시글을 확인하실 수 있습니다.' };
+    let currentCategory = 'ALL';
+
+    function getCategoryFromUrl() {
+        const params = new URLSearchParams(location.search);
+        return params.get('category') || 'ALL';
     }
 
-    // 게시판 정보 설정
-    function setBoardInfo() {
-        const board = getBoardType();
-        document.getElementById('board-title').textContent = board.name;
-        document.getElementById('board-description').textContent = board.description;
-        document.title = `${board.name} - 펫 포테이토 커뮤니티`;
-    }
-
-    // 날짜 포맷팅 함수
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-        const isToday = date.toDateString() === now.toDateString();
-
-        if (isToday) {
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-        } else {
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-    }
-
-    // 게시글 목록 가져오기
-    async function fetchPosts(page = 0, size = 10, keyword = '') {
-        try {
-            let url = `/api/posts?page=${page}&size=${size}`;
-            if (keyword) {
-                url += `&keyword=${encodeURIComponent(keyword)}`;
+    function setActiveButton() {
+        document.querySelectorAll('.filter-buttons button').forEach(btn => {
+            btn.classList.remove('active', 'btn-primary');
+            btn.classList.add('btn-outline-primary');
+            if (btn.dataset.category === currentCategory) {
+                btn.classList.add('active', 'btn-primary');
+                btn.classList.remove('btn-outline-primary');
             }
-
-            const response = await fetch(url);
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('게시글을 불러오는 중 오류 발생:', error);
-            return { content: [], totalPages: 0, number: 0 };
-        }
+        });
     }
 
-    // 게시글 목록 렌더링
+    async function fetchPosts(page = 0, size = 10, keyword = '') {
+        let url = '';
+        if (currentCategory === 'POPULAR') {
+            url = `/api/posts/popular?page=${page}&size=${size}`;
+        } else {
+            url = `/api/posts?page=${page}&size=${size}`;
+            if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+            if (currentCategory !== 'ALL') url += `&hashtagId=${currentCategory}`;
+        }
+
+        const response = await fetch(url);
+        return await response.json();
+    }
+
     function renderPosts(posts) {
         const container = document.getElementById('postItemsContainer');
         container.innerHTML = '';
-
-        if (posts.length === 0) {
+        if (!posts || posts.length === 0) {
             container.innerHTML = '<div class="post-item" style="text-align: center;">게시글이 없습니다.</div>';
             return;
         }
-
-        posts.forEach((post, index) => {
-            const postElement = document.createElement('div');
-            postElement.className = 'post-item';
-
-            // 모바일용 레이아웃
-            if (window.innerWidth <= 768) {
-                postElement.innerHTML = `
-                    <div class="post-title-wrapper">
-                        <a href="/boards/view.html?id=${post.postId}" class="post-title">${post.title}</a>
-                        <span class="post-tag">${post.hashtagName}</span>
-                    </div>
-                    <div class="post-meta">
-                        <span class="post-author"><i class="fas fa-user"></i> ${post.username}</span>
-                        <span class="post-date"><i class="fas fa-clock"></i> ${formatDate(post.createdAt)}</span>
-                        <span class="post-views"><i class="fas fa-eye"></i> ${post.viewCount}</span>
-                    </div>
-                `;
-            } else {
-                // 데스크톱용 레이아웃
-                postElement.innerHTML = `
-                    <div class="post-num">${post.postId}</div>
-                    <div>
-                        <a href="/boards/view.html?id=${post.postId}" class="post-title">${post.title}</a>
-                        <span class="post-tag">${post.hashtagName}</span>
-                    </div>
-                    <div class="post-author">${post.username}</div>
-                    <div class="post-date">${formatDate(post.createdAt)}</div>
-                    <div class="post-views">${post.viewCount}</div>
-                `;
-            }
-
-            container.appendChild(postElement);
+        posts.forEach(post => {
+            const el = document.createElement('div');
+            el.className = 'post-item';
+            el.innerHTML = `
+                <div class="post-num">${post.postId}</div>
+                <div>
+                    <span class="post-tag ${getTagClass(post.hashtagName)}">${post.hashtagName}</span>
+                    <a href="/boards/view.html?id=${post.postId}" class="post-title">${post.title}</a>
+                </div>
+                <div class="post-author">${post.username}</div>
+                <div class="post-date">${formatDate(post.createdAt)}</div>
+                <div class="post-views">${post.viewCount}</div>
+            `;
+            container.appendChild(el);
         });
     }
-
-    // 페이지네이션 렌더링
-    function renderPagination(currentPage, totalPages) {
-        const paginationContainer = document.getElementById('pagination');
-        paginationContainer.innerHTML = '';
-
-        // 처음 페이지로 가기
-        if (currentPage > 2) {
-            const firstPage = document.createElement('a');
-            firstPage.href = '#';
-            firstPage.className = 'pagination-item';
-            firstPage.innerHTML = '<i class="fas fa-angle-double-left"></i>';
-            firstPage.onclick = (e) => {
-                e.preventDefault();
-                loadPage(0);
-            };
-            paginationContainer.appendChild(firstPage);
+    function getTagClass(name) {
+        switch (name) {
+            case '자유': return 'tag-general';
+            case '미용': return 'tag-grooming';
+            case '의료': return 'tag-hospital';
+            case '산책': return 'tag-walk';
+            default: return '';
         }
+    }
 
-        // 이전 페이지로 가기
-        if (currentPage > 0) {
-            const prevPage = document.createElement('a');
-            prevPage.href = '#';
-            prevPage.className = 'pagination-item';
-            prevPage.innerHTML = '<i class="fas fa-angle-left"></i>';
-            prevPage.onclick = (e) => {
-                e.preventDefault();
-                loadPage(currentPage - 1);
-            };
-            paginationContainer.appendChild(prevPage);
-        }
-
-        // 페이지 번호
-        const startPage = Math.max(0, currentPage - 2);
-        const endPage = Math.min(totalPages - 1, currentPage + 2);
-
-        for (let i = startPage; i <= endPage; i++) {
-            const pageLink = document.createElement('a');
-            pageLink.href = '#';
-            pageLink.className = 'pagination-item' + (i === currentPage ? ' active' : '');
-            pageLink.textContent = i + 1;
-            pageLink.onclick = (e) => {
+    function renderPagination(currentPage, totalCount, size) {
+        const pagination = document.getElementById('pagination');
+        const totalPages = Math.ceil(totalCount / size);
+        pagination.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+            const el = document.createElement('a');
+            el.href = '#';
+            el.className = 'pagination-item' + (i === currentPage ? ' active' : '');
+            el.textContent = i + 1;
+            el.onclick = e => {
                 e.preventDefault();
                 loadPage(i);
             };
-            paginationContainer.appendChild(pageLink);
-        }
-
-        // 다음 페이지로 가기
-        if (currentPage < totalPages - 1) {
-            const nextPage = document.createElement('a');
-            nextPage.href = '#';
-            nextPage.className = 'pagination-item';
-            nextPage.innerHTML = '<i class="fas fa-angle-right"></i>';
-            nextPage.onclick = (e) => {
-                e.preventDefault();
-                loadPage(currentPage + 1);
-            };
-            paginationContainer.appendChild(nextPage);
-        }
-
-        // 마지막 페이지로 가기
-        if (currentPage < totalPages - 3) {
-            const lastPage = document.createElement('a');
-            lastPage.href = '#';
-            lastPage.className = 'pagination-item';
-            lastPage.innerHTML = '<i class="fas fa-angle-double-right"></i>';
-            lastPage.onclick = (e) => {
-                e.preventDefault();
-                loadPage(totalPages - 1);
-            };
-            paginationContainer.appendChild(lastPage);
+            pagination.appendChild(el);
         }
     }
 
-    // 페이지 로드
     async function loadPage(page = 0) {
-        const searchInput = document.getElementById('searchInput');
-        const keyword = searchInput.value.trim();
-
+        const keyword = document.getElementById('searchInput').value.trim();
         const data = await fetchPosts(page, 10, keyword);
+        renderPosts(data.postList);
+        renderPagination(page, data.count || 0, 10);
 
-        if (data && data.content) {
-            renderPosts(data.content);
-            renderPagination(data.number, data.totalPages);
-
-            // URL 파라미터 업데이트
-            const params = new URLSearchParams(window.location.search);
-            params.set('page', page);
-            if (keyword) {
-                params.set('keyword', keyword);
-            } else {
-                params.delete('keyword');
-            }
-
-            const newUrl = `${window.location.pathname}?${params.toString()}`;
-            window.history.pushState({ page }, '', newUrl);
-
-            // 페이지 최상단으로 스크롤
-            window.scrollTo(0, 0);
-        }
+        const params = new URLSearchParams();
+        params.set('category', currentCategory);
+        history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
     }
 
-    // 검색 기능
-    function setupSearch() {
-        const searchButton = document.getElementById('searchButton');
-        const searchInput = document.getElementById('searchInput');
-
-        // URL에서 검색어 가져오기
-        const params = new URLSearchParams(window.location.search);
-        const keyword = params.get('keyword');
-        if (keyword) {
-            searchInput.value = keyword;
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        if (date.toDateString() === now.toDateString()) {
+            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
         }
+        return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
 
-        // 검색 버튼 클릭
-        searchButton.addEventListener('click', () => {
-            loadPage(0);
-        });
-
-        // 엔터키 검색
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
+    function setupCategoryButtons() {
+        document.querySelectorAll('.filter-buttons button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentCategory = btn.dataset.category;
+                setActiveButton();
                 loadPage(0);
-            }
-        });
-    }
-
-
-    // 인증 상태에 따라 버튼 변경
-    async function updateAuthButtons() {
-        try {
-            const response = await fetch('/auth/me');
-            if (!response.ok) return;
-
-            const user = await response.json();
-            const authButtons = document.getElementById('authButtons');
-
-            if (user && user.userId) {
-                authButtons.innerHTML = `
-                    <span style="margin-right: 10px;">${user.nickname || user.username}님</span>
-                    <a href="/mypage.html" class="btn btn-outline">마이페이지</a>
-                    <button onclick="logout()" class="btn btn-primary">로그아웃</button>
-                `;
-            }
-        } catch (error) {
-            console.error('인증 상태 확인 오류:', error);
-        }
-    }
-
-    // 로그아웃 함수
-    async function logout() {
-        try {
-            const response = await fetch('/auth/logout', {
-                method: 'POST'
             });
-
-            const result = await response.text();
-            if (result === 'logout success') {
-                alert('로그아웃 되었습니다.');
-                window.location.href = '/index.html';
-            }
-        } catch (error) {
-            console.error('로그아웃 오류:', error);
-        }
+        });
     }
 
-    // 초기화
-    document.addEventListener('DOMContentLoaded', async () => {
-        setBoardInfo();
+    function setupSearch() {
+        document.getElementById('searchButton').onclick = () => loadPage(0);
+        document.getElementById('searchInput').onkeydown = (e) => {
+            if (e.key === 'Enter') loadPage(0);
+        };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        currentCategory = getCategoryFromUrl();
+        setActiveButton();
+        setupCategoryButtons();
         setupSearch();
-        updateAuthButtons();
-
-        // URL 파라미터에서 페이지 정보 가져오기
-        const params = new URLSearchParams(window.location.search);
-        const page = parseInt(params.get('page')) || 0;
-
-        await loadPage(page);
-
-        // 브라우저 뒤로가기/앞으로가기 처리
-        window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.page !== undefined) {
-                loadPage(event.state.page);
-            } else {
-                loadPage(0);
-            }
-        });
+        loadPage(0);
     });
 </script>
+
 </body>
 </html>

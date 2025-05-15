@@ -123,6 +123,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             nativeQuery = true)
     Page<Post> findPopularPostsByHashtagInLast48Hours(@Param("hashtagId") String hashtagId, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"user", "hashtag"})
+    @Query("SELECT p FROM Post p JOIN FETCH p.hashtag h WHERE h.codeId = :hashtagId ORDER BY p.createdAt DESC")
+    Page<Post> findByHashtag_CodeIdWithFetch(@Param("hashtagId") String hashtagId, Pageable pageable);
 //    @EntityGraph(attributePaths = {"user", "hashtag", "postLikes"})
 //    @Query(value = """
 //        SELECT p
