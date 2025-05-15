@@ -70,9 +70,10 @@ public class PostController {
     public ResponseEntity<PostResultDto> getPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String hashtagId
     ) {
-        return ResponseEntity.ok(postService.getPosts(page, size, keyword));
+        return ResponseEntity.ok(postService.getPosts(page, size, keyword, hashtagId));
     }
 
     @PostMapping("/{postId}/like")

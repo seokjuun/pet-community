@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResultDto getCommentsByPostId(Long postId) {
-        List<CommentDetailResponse> comments = commentRepository.findAllByPostId(postId);
+        List<CommentDetailResponse> comments = commentRepository.findAllByPostIdOrderByCreatedAtAsc(postId);
         return CommentResultDto.builder()
                 .result("success")
                 .commentsList(comments)

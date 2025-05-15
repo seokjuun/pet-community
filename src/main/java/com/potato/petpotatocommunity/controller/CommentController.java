@@ -26,16 +26,16 @@ public class CommentController {
         UserDto user = (UserDto) session.getAttribute("user");
         CommentResultDto resultDto = commentService.getCommentsByPostId(postId);
 
-        if (resultDto.getCommentsList() != null) {
-            for (var c : resultDto.getCommentsList()) {
-                c.setLikeCount(commentLikeService.countLikes(c.getCommentId()));
-                if (user != null) {
-                    c.setLiked(commentLikeService.isLiked(c.getCommentId(), user.getUserId()));
-                } else {
-                    c.setLiked(false);
-                }
-            }
-        }
+//        if (resultDto.getCommentsList() != null) {
+//            for (var c : resultDto.getCommentsList()) {
+//                c.setLikeCount(commentLikeService.countLikes(c.getCommentId()));
+//                if (user != null) {
+//                    c.setLiked(commentLikeService.isLiked(c.getCommentId(), user.getUserId()));
+//                } else {
+//                    c.setLiked(false);
+//                }
+//            }
+//        }
 
         return ResponseEntity.ok(resultDto);
     }

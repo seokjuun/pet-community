@@ -16,7 +16,9 @@ public class PostDetailResponse {
     private String content;
     private int viewCount;
     private String hashtagName;
+    private String hashtagId;
     private String username;
+    private Long userId;
     private LocalDateTime createdAt;
     private List<String> imageUrls;
     private boolean isLiked;
