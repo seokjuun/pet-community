@@ -365,6 +365,28 @@
 </footer>
 
 <script>
+    // 로그인 상태에 따라 버튼 변경
+    document.addEventListener('DOMContentLoaded', function() {
+        // API 호출하여 현재 로그인 상태 확인
+        fetch('/auth/me')
+            .then(response => response.json())
+            .then(user => {
+                const authButtons = document.getElementById('authButtons');
+
+                if (user && user.userId) {
+                    // 로그인 상태인 경우
+                    authButtons.innerHTML = `
+                            <span style="margin-right: 10px;">${user.nickname || user.username}님</span>
+                            <a href="mypage.html" class="btn btn-outline">마이페이지</a>
+                            <button onclick="logout()" class="btn btn-primary">로그아웃</button>
+                        `;
+                }
+            })
+            .catch(error => {
+                console.error('로그인 상태 확인 오류:', error);
+            });
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
         // 목록으로 버튼 기능 설정
         document.getElementById('boardLinkButton').addEventListener('click', () => {
