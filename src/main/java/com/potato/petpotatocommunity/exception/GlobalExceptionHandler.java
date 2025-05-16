@@ -82,5 +82,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // 반려 동물 정보 없을 경우, 품종 코드 없을 경우 예외
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNotFoundException(NotFoundException e) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
 }
 
