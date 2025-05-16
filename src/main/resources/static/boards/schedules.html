@@ -12,445 +12,10 @@
     <link rel="stylesheet" href="/assets/css/button.css">
     <link rel="stylesheet" href="/assets/css/footer.css">
 
-    <style>
-        /* Page Header */
-        .page-header {
-            background-color: var(--light);
-            padding: 30px 0;
-            margin-bottom: 30px;
-        }
-
-        .page-header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .page-header p {
-            color: #777;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            background-color: white;
-            border-radius: 10px 10px 0 0;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 0;
-        }
-
-        .tab-item {
-            flex: 1;
-            text-align: center;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-            font-weight: 500;
-        }
-
-        .tab-item.active {
-            background-color: white;
-            border-bottom: 3px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .tab-item:hover:not(.active) {
-            background-color: #f9f9f9;
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            background-color: white;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Schedule Table */
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .schedule-table th, .schedule-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .schedule-table th {
-            background-color: var(--light);
-            font-weight: 600;
-        }
-
-        .schedule-table .time-slot {
-            width: 12.5%;
-            font-weight: 500;
-            background-color: var(--light);
-        }
-
-        .schedule-empty {
-            color: #ccc;
-            font-style: italic;
-        }
-
-        .schedule-item {
-            background-color: #e8f4ff;
-            border-radius: 5px;
-            padding: 5px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .schedule-item:hover {
-            background-color: #d1e9ff;
-        }
-
-        .schedule-item-time {
-            font-weight: 500;
-            color: var(--info);
-        }
-
-        .schedule-item-place {
-            font-weight: normal;
-            color: var(--dark);
-        }
-
-        .schedule-item-pet {
-            font-size: 13px;
-            color: #666;
-        }
-
-        /* Actions Bar */
-        .actions-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-input {
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            width: 500px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            z-index: 1100;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background-color: white;
-            max-width: 600px;
-            margin: 50px auto;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 20px;
-            background-color: var(--light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--dark);
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .modal-footer {
-            padding: 15px 20px;
-            background-color: #f9f9f9;
-            text-align: right;
-            border-top: 1px solid #eee;
-        }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: white;
-        }
-
-        .form-check {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 5px;
-        }
-
-        .form-time {
-            display: flex;
-            gap: 10px;
-        }
-
-        .form-time-input {
-            width: 120px;
-        }
-
-        /* Friend List */
-        .friend-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .friend-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-
-        .friend-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .friend-header {
-            padding: 15px;
-            background-color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .friend-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            background-color: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #999;
-        }
-
-        .friend-info {
-            flex: 1;
-        }
-
-        .friend-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .friend-pets {
-            font-size: 14px;
-            color: #666;
-        }
-
-        .friend-body {
-            padding: 15px;
-        }
-
-        .friend-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .friend-schedule-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .friend-duration {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .friend-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .back-to-friends-btn {
-            padding: 5px 10px;
-            font-size: 14px;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 60px 0 0;
-        }
-
-        .footer-top {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .footer-widget h4 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .footer-social a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            color: white;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .footer-social a:hover {
-            background-color: var(--primary);
-        }
-
-        .footer-bottom {
-            background-color: rgba(0,0,0,0.2);
-            padding: 20px 0;
-            text-align: center;
-            font-size: 14px;
-            color: #aaa;
-        }
-
-        /* Helper Classes */
-        .text-center {
-            text-align: center;
-        }
-
-        .mb-10 {
-            margin-bottom: 10px;
-        }
-
-        .mb-20 {
-            margin-bottom: 20px;
-        }
-
-        .section-divider {
-            margin: 40px 0;
-            border: none;
-            border-top: 0.5px solid #ccc;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-main .container {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .nav-menu {
-                margin-top: 15px;
-                margin-bottom: 15px;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .nav-menu li {
-                margin: 0 10px;
-                margin-bottom: 5px;
-            }
-
-            .schedule-table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .form-time {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/schedules/friend.css">
+    <link rel="stylesheet" href="/assets/css/schedules/modal.css">
+    <link rel="stylesheet" href="/assets/css/schedules/schedules.css">
+    <link rel="stylesheet" href="/assets/css/schedules/common.css">
 </head>
 <body>
 <!-- Header -->
@@ -526,93 +91,33 @@
                 <tbody>
                     <tr>
                         <td class="time-slot">오전</td>
-                        <td>
-                            <div class="schedule-item" data-id="1" data-day="0" data-period="morning">
-                                <div class="schedule-item-time">07:30 - 08:30</div>
-                                <div class="schedule-item-place">한강공원</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td>
-                            <div class="schedule-item" data-id="2" data-day="2" data-period="morning">
-                                <div class="schedule-item-time">08:00 - 09:00</div>
-                                <div class="schedule-item-place">동네 뒷산</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td>
-                            <div class="schedule-item" data-id="3" data-day="4" data-period="morning">
-                                <div class="schedule-item-time">08:00 - 09:00</div>
-                                <div class="schedule-item-place">동네 뒷산</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td>
-                            <div class="schedule-item" data-id="4" data-day="6" data-period="morning">
-                                <div class="schedule-item-time">09:00 - 10:00</div>
-                                <div class="schedule-item-place">한강공원</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td class="time-slot">오후</td>
-                        <td>
-                            <div class="schedule-item" data-id="5" data-day="0" data-period="afternoon">
-                                <div class="schedule-item-time">16:00 - 17:00</div>
-                                <div class="schedule-item-place">아파트 단지</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td>
-                            <div class="schedule-item" data-id="6" data-day="3" data-period="afternoon">
-                                <div class="schedule-item-time">17:30 - 18:30</div>
-                                <div class="schedule-item-place">아파트 단지</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td>
-                            <div class="schedule-item" data-id="7" data-day="5" data-period="afternoon">
-                                <div class="schedule-item-time">17:00 - 18:00</div>
-                                <div class="schedule-item-place">아파트 단지</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="schedule-item" data-id="8" data-day="6" data-period="afternoon">
-                                <div class="schedule-item-time">15:00 - 16:00</div>
-                                <div class="schedule-item-place">근처 공원</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td class="time-slot">저녁</td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td>
-                            <div class="schedule-item" data-id="9" data-day="1" data-period="evening">
-                                <div class="schedule-item-time">20:00 - 21:00</div>
-                                <div class="schedule-item-place">아파트 단지</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td>
-                            <div class="schedule-item" data-id="10" data-day="4" data-period="evening">
-                                <div class="schedule-item-time">20:00 - 21:00</div>
-                                <div class="schedule-item-place">아파트 단지</div>
-                                <div class="schedule-item-pet">댕댕이(포메)</div>
-                            </div>
-                        </td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
-                        <td><span class="schedule-empty">일정 없음</span></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
@@ -623,10 +128,6 @@
 <div class="tab-content" id="friend-schedule">
     <div class="actions-bar">
         <h3>나의 친구 목록</h3>
-        <div class="search-box">
-            <input type="text" class="search-input" id="friendSearch" placeholder="친구 이름 검색...">
-            <button class="btn btn-primary" id="searchFriendBtn">검색</button>
-        </div>
         <button class="btn btn-secondary" id="addFriendBtn">
             <i class="fas fa-user-plus"></i> 친구 추가
         </button>
@@ -634,62 +135,6 @@
 
     <!-- 친구 목록 섹션 -->
     <div class="friend-list">
-        <div class="friend-card" data-friend-id="1">
-            <div class="friend-header">
-                <div class="friend-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="friend-info">
-                    <div class="friend-name">강아지맘</div>
-                    <div class="friend-pets">반려동물: 멍멍이(비숑)</div>
-                    <div class="friend-duration">친구 기간: 2년</div>
-                </div>
-            </div>
-            <div class="friend-body">
-                <div class="friend-actions">
-                    <button type="button" class="btn btn-primary view-schedule-btn">시간표 보기</button>
-                    <button class="btn btn-outline btn-secondary remove-friend-btn">친구 삭제</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="friend-card" data-friend-id="2">
-            <div class="friend-header">
-                <div class="friend-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="friend-info">
-                    <div class="friend-name">고양이집사</div>
-                    <div class="friend-pets">반려동물: 냥이(코숏)</div>
-                    <div class="friend-duration">친구 기간: 1년</div>
-                </div>
-            </div>
-            <div class="friend-body">
-                <div class="friend-actions">
-                    <button type="button" class="btn btn-primary view-schedule-btn">시간표 보기</button>
-                    <button class="btn btn-outline btn-secondary remove-friend-btn">친구 삭제</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="friend-card" data-friend-id="3">
-            <div class="friend-header">
-                <div class="friend-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="friend-info">
-                    <div class="friend-name">멍뭉이아빠</div>
-                    <div class="friend-pets">반려동물: 럭키(리트리버)</div>
-                    <div class="friend-duration">친구 기간: 3년</div>
-                </div>
-            </div>
-            <div class="friend-body">
-                <div class="friend-actions">
-                    <button type="button" class="btn btn-primary view-schedule-btn">시간표 보기</button>
-                    <button class="btn btn-outline btn-secondary remove-friend-btn">친구 삭제</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- 친구 시간표 섹션 - 처음에는 숨겨져 있음 -->
@@ -699,7 +144,7 @@
             <h3 id="selectedFriendName">친구님의 산책 시간표</h3>
         </div>
         
-        <table class="schedule-table">
+        <table class="schedule-table" id="friend-schedule-table">
             <thead>
                 <tr>
                     <th class="time-slot">시간대</th>
@@ -713,72 +158,36 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="time-slot">오전</td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td>
-                        <div class="schedule-item">
-                            <div class="schedule-item-time">07:00 - 08:00</div>
-                            <div class="schedule-item-place">중앙공원</div>
-                            <div class="schedule-item-pet">멍멍이(비숑)</div>
-                        </div>
-                    </td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td>
-                        <div class="schedule-item">
-                            <div class="schedule-item-time">07:00 - 08:00</div>
-                            <div class="schedule-item-place">중앙공원</div>
-                            <div class="schedule-item-pet">멍멍이(비숑)</div>
-                        </div>
-                    </td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td>
-                        <div class="schedule-item">
-                            <div class="schedule-item-time">07:00 - 08:00</div>
-                            <div class="schedule-item-place">중앙공원</div>
-                            <div class="schedule-item-pet">멍멍이(비숑)</div>
-                        </div>
-                    </td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                </tr>
-                <tr>
-                    <td class="time-slot">오후</td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td>
-                        <div class="schedule-item">
-                            <div class="schedule-item-time">15:30 - 16:30</div>
-                            <div class="schedule-item-place">강아지 카페</div>
-                            <div class="schedule-item-pet">멍멍이(비숑)</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="time-slot">저녁</td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td>
-                        <div class="schedule-item">
-                            <div class="schedule-item-time">19:00 - 20:00</div>
-                            <div class="schedule-item-place">아파트 단지</div>
-                            <div class="schedule-item-pet">멍멍이(비숑)</div>
-                        </div>
-                    </td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                    <td>
-                        <div class="schedule-item">
-                            <div class="schedule-item-time">19:00 - 20:00</div>
-                            <div class="schedule-item-place">아파트 단지</div>
-                            <div class="schedule-item-pet">멍멍이(비숑)</div>
-                        </div>
-                    </td>
-                    <td><span class="schedule-empty">일정 없음</span></td>
-                </tr>
+            <tr>
+                <td class="time-slot">오전</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-slot">오후</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-slot">저녁</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
 
@@ -787,6 +196,7 @@
         </div>
     </div>
 </div>
+
 <!-- Add Schedule Modal -->
 <div class="modal" id="scheduleModal">
     <div class="modal-content">
@@ -831,19 +241,11 @@
                 <div class="form-group">
                     <label class="form-label">반려동물</label>
                     <select class="form-select" id="pet" required>
-                        <option value="댕댕이(포메)">댕댕이(포메)</option>
-                        <option value="냥이(코숏)">냥이(코숏)</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">메모</label>
                     <textarea class="form-control" id="memo" rows="3" placeholder="추가 메모사항"></textarea>
-                </div>
-                <div class="form-group">
-                    <div class="form-check">
-                        <input type="checkbox" id="recurring" class="form-check-input">
-                        <label for="recurring" class="form-check-label">매주 반복</label>
-                    </div>
                 </div>
             </form>
         </div>
@@ -863,9 +265,9 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="form-label">닉네임 또는 이메일로 검색</label>
+                <label class="form-label">이메일로 검색</label>
                 <div class="search-box">
-                    <input type="text" class="form-control" id="friendSearchInput" placeholder="닉네임 또는 이메일 입력">
+                    <input type="text" class="form-control" id="friendSearchInput" placeholder="이메일 입력">
                     <button class="btn btn-primary" id="friendSearchBtn">검색</button>
                 </div>
             </div>
@@ -892,143 +294,283 @@
         </div>
     </div>
 </div>
+
+    <div id="scheduleDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">산책 일정 상세</h2>
+                <button type="button" class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="pet-profile">
+                    <img id="pet-image" src="/api/placeholder/100/100" alt="반려동물 사진" class="pet-image">
+                    <div class="pet-info">
+                        <div class="pet-name" id="pet-name"></div>
+                        <div class="pet-details">
+                            <span class="pet-detail-label">종류:</span>
+                            <span class="pet-detail-value" id="pet-breed"></span>
+
+                            <span class="pet-detail-label">생일:</span>
+                            <span class="pet-detail-value" id="pet-birthday"></span>
+
+                            <span class="pet-detail-label">나이:</span>
+                            <span class="pet-detail-value" id="pet-age"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">요일</span>
+                    <div class="detail-value" id="detail-day"></div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">시간대</span>
+                    <div class="detail-value" id="detail-period"></div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">시간</span>
+                    <div class="detail-value" id="detail-time"></div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">장소</span>
+                    <div class="detail-value" id="detail-place"></div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">메모</span>
+                    <div class="detail-value" id="detail-memo"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="scheduleDeleteBtn" >일정 삭제</button>
+                <button type="button" class="btn btn-secondary" id="scheduleDetailCloseBtn" >닫기</button>
+            </div>
+        </div>
+    </div>
 </section>
 
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/schedule.js"></script>
+<script src="/assets/js/modal.js"></script>
 <script>
     // 친구 시간표 보기 기능 추가
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFriends();
+        loadSchedules();
+        tabItems();
+        checkAuthStatus();
+
+
+        // 친구 목록으로 돌아가기 버튼
+        document.querySelector('.back-to-friends-btn').addEventListener('click', function() {
+            document.querySelector('.friend-schedule-container').style.display = 'none';
+            document.querySelector('.friend-list').style.display = 'grid';
+            document.querySelector('.search-box').style.display = 'flex';
+        });
+    });
+
+    // 탭 기능 초기화
+    function tabItems() {
         const tabItems = document.querySelectorAll('.tab-item');
         const tabContents = document.querySelectorAll('.tab-content');
 
         tabItems.forEach(item => {
             item.addEventListener('click', function() {
                 const tabId = this.getAttribute('data-tab');
-                
-                // Remove active class from all tabs and contents
+
                 tabItems.forEach(tab => tab.classList.remove('active'));
                 tabContents.forEach(content => content.classList.remove('active'));
-                
-                // Add active class to clicked tab and corresponding content
+
                 this.classList.add('active');
                 document.getElementById(tabId).classList.add('active');
             });
         });
-    
-        // 시간표 보기 버튼 클릭 이벤트
-        const viewScheduleBtns = document.querySelectorAll('.view-schedule-btn');
-        viewScheduleBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const friendCard = this.closest('.friend-card');
-                const friendId = friendCard.getAttribute('data-friend-id');
-                const friendName = friendCard.querySelector('.friend-name').textContent;
-                
-                // 친구 목록 숨기기
-                document.querySelector('.friend-list').style.display = 'none';
-                
-                // 친구 시간표 표시
-                const friendScheduleContainer = document.querySelector('.friend-schedule-container');
-                friendScheduleContainer.style.display = 'block';
-                
-                // 친구 이름 표시
-                document.getElementById('selectedFriendName').textContent = friendName + '님의 산책 시간표';
-                
-                // 여기서 실제로는 AJAX 등을 통해 해당 친구의 시간표를 불러오는 로직이 필요합니다
-                // 예시 코드에서는 생략하고 같은 시간표를 보여줍니다
-            });
-        });
-    
-        // 친구 목록으로 돌아가기 버튼
-        document.querySelector('.back-to-friends-btn').addEventListener('click', function() {
-            document.querySelector('.friend-schedule-container').style.display = 'none';
-            document.querySelector('.friend-list').style.display = 'grid';
-        });
-        
-        // 친구 삭제 버튼
-        const removeFriendBtns = document.querySelectorAll('.remove-friend-btn');
-        removeFriendBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (confirm('정말 이 친구를 삭제하시겠습니까?')) {
-                    const friendCard = this.closest('.friend-card');
-                    const friendId = friendCard.getAttribute('data-friend-id');
-                    
-                    // 여기서 실제로는 AJAX 등을 통해 친구 삭제 API를 호출하고
-                    // 성공 응답 시 아래 코드를 실행하게 됩니다
-                    
-                    // 화면에서 친구 카드 제거
-                    friendCard.remove();
-                    alert('친구가 삭제되었습니다.');
-                }
-            });
-        });
-    });
+    }
 
-    // Modal Functions
-    const scheduleModal = document.getElementById('scheduleModal');
-    const friendModal = document.getElementById('friendModal');
+    /* 친구 리스트 불러오기 */
+    async function loadFriends() {
+        try {
+            const response = await fetch('/friends');
+            const data = await response.json();
 
-    // Schedule Modal
-    document.getElementById('addScheduleBtn').addEventListener('click', function() {
-        scheduleModal.style.display = 'block';
-    });
-
-    document.getElementById('closeScheduleModal').addEventListener('click', function() {
-        scheduleModal.style.display = 'none';
-    });
-
-    document.getElementById('cancelScheduleBtn').addEventListener('click', function() {
-        scheduleModal.style.display = 'none';
-    });
-
-    document.getElementById('saveScheduleBtn').addEventListener('click', function() {
-        // Here you would handle saving the schedule
-        alert('일정이 저장되었습니다!');
-        scheduleModal.style.display = 'none';
-    });
-
-    // Friend Modal
-    document.getElementById('addFriendBtn').addEventListener('click', function() {
-        friendModal.style.display = 'block';
-    });
-
-    document.getElementById('closeFriendModal').addEventListener('click', function() {
-        friendModal.style.display = 'none';
-    });
-
-    document.getElementById('cancelFriendBtn').addEventListener('click', function() {
-        friendModal.style.display = 'none';
-    });
-
-    document.getElementById('friendSearchBtn').addEventListener('click', function() {
-        document.getElementById('friendSearchResults').style.display = 'block';
-    });
-
-    document.getElementById('sendFriendRequest').addEventListener('click', function() {
-        alert('친구 요청이 발송되었습니다!');
-        friendModal.style.display = 'none';
-    });
-
-    // Schedule Item Click
-    const scheduleItems = document.querySelectorAll('.schedule-item');
-    scheduleItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-            const day = this.getAttribute('data-day');
-            const period = this.getAttribute('data-period');
-            
-            // Here you would open a modal or perform an action when a schedule item is clicked
-            alert(`일정 ID: ${id}, 요일: ${day}, 시간대: ${period}`);
-        });
-    });
-
-    // Close modals when clicking outside
-    window.addEventListener('click', function(event) {
-        if (event.target === scheduleModal) {
-            scheduleModal.style.display = 'none';
+            renderFriends(data.friends);
+        } catch (error) {
+            console.error('친구 목록 불러오기 오류:', error);
         }
-        if (event.target === friendModal) {
-            friendModal.style.display = 'none';
+    }
+
+    function renderFriends(friends) {
+        const container = document.querySelector('.friend-list');
+        container.innerHTML = '';
+
+        friends.forEach(f => {
+            const petsText = f.pets
+                .map(p => `${escapeHtml(p.name)}(${escapeHtml(p.breed)})`)
+                .join(', ');
+
+            const card = document.createElement('div');
+            card.className = 'friend-card';
+            card.dataset.friendId = f.friendId;
+
+            card.innerHTML = `
+                <div class="friend-header">
+                  <div class="friend-avatar">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <div class="friend-info">
+                    <div class="friend-name">${escapeHtml(f.friendName)}</div>
+                    <div class="friend-pets">반려동물: ${escapeHtml(petsText)}</div>
+                    <div class="friend-duration">친구 기간: ${formatDuration(f.createdAt)}</div>
+                  </div>
+                </div>
+                <div class="friend-body">
+                  <div class="friend-actions">
+                    <button type="button" class="btn btn-primary view-schedule-btn">시간표 보기</button>
+                    <button class="btn btn-outline btn-secondary remove-friend-btn">친구 삭제</button>
+                  </div>
+                </div>
+              `;
+
+            const removeBtn = card.querySelector('.remove-friend-btn');
+            removeBtn.addEventListener('click', () => removeFriend(f.friendId, card));
+
+            const viewScheduleBtn = card.querySelector('.view-schedule-btn');
+            viewScheduleBtn.addEventListener('click', () => loadFriendSchedules(f.friendId, card));
+
+            container.appendChild(card);
+        });
+    }
+
+    function loadFriendSchedules(friendId, cardElement) {
+        const friendName = cardElement.querySelector('.friend-name').textContent;
+
+        document.querySelector('.friend-list').style.display = 'none';
+
+        const friendScheduleContainer = document.querySelector('.friend-schedule-container');
+        friendScheduleContainer.style.display = 'block';
+
+        document.getElementById('selectedFriendName').textContent = friendName + '님의 산책 시간표';
+
+        loadFriendSchedulesTable(friendId);
+    }
+
+    function removeFriend(friendId, cardElement) {
+        if (!confirm('정말 친구를 삭제하시겠습니까?')) return;
+        fetch(`/friends/${friendId}`, {
+            method: 'DELETE'
+        }).then(res => {
+            if (!res.ok) throw new Error('삭제 실패');
+            cardElement.remove();
+        }).catch(err => alert(err.message));
+    }
+
+    /* pet 정보 불러오기 */
+    async function loadPets() {
+        try {
+            const res = await fetch('/schedules/pet');
+            const pets = await res.json();
+
+            const petSelect = document.getElementById('pet');
+            petSelect.innerHTML = '';  // 기존 옵션 제거
+
+            pets.forEach(p => {
+                const label = `${p.name}(${p.breed})`;
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = label;
+                petSelect.appendChild(option);
+            });
+        } catch (err) {
+            console.error(err);
         }
-    });
+    }
+
+    function formatPetList(pets) {
+        if (!pets || pets.length === 0) return '없음';
+        return pets.map(p => `${escapeHtml(p.name)}(${escapeHtml(p.breed)})`).join(', ');
+    }
+
+    /* 친구 검색 */
+    async function handleFriendSearch() {
+        const input = document.getElementById('friendSearchInput');
+        const query = input.value.trim();
+        if (!query) {
+            alert('이메일을 입력하세요.');
+            return;
+        }
+
+        try {
+            const res = await fetch(`/friends/search?email=${encodeURIComponent(query)}`);
+            if (!res.ok) {
+                alert('사용자를 찾을 수 없습니다.');
+                clearFriendResult();
+                return;
+            }
+
+            const data = await res.json(); // FriendSearchResponse
+            renderFriendResult(data);
+        } catch (err) {
+            console.error(err);
+            alert('검색 중 오류가 발생했습니다.');
+        }
+    }
+
+    function renderFriendResult(friend) {
+        const container = document.getElementById('friendSearchResults');
+        container.innerHTML = `
+            <h4 class="mb-10">검색 결과</h4>
+            <div class="friend-card" data-friend-id="${friend.friendId}">
+              <div class="friend-header">
+                <div class="friend-avatar"><i class="fas fa-user"></i></div>
+                <div class="friend-info">
+                  <div class="friend-name">${escapeHtml(friend.friendName)}</div>
+                  <div class="friend-pets">
+                    반려동물: ${formatPetList(friend.pets)}
+                  </div>
+                </div>
+              </div>
+              <div class="friend-body">
+                <button class="btn btn-primary" id="sendFriendRequest"
+                    ${friend.friendStatus ? 'disabled' : ''}>
+                    ${friend.friendStatus ? '내 친구' : '친구 맺기'}
+                </button>
+            </div>
+            </div>
+          `;
+
+        container.style.display = 'block';
+
+        document.getElementById('sendFriendRequest').addEventListener('click', () => {
+            sendFriendRequest(friend.friendId);
+        });
+    }
+
+    function clearFriendResult() {
+        const container = document.getElementById('friendSearchResults');
+        const input = document.getElementById('friendSearchInput');
+
+        container.innerHTML = '';
+        container.style.display = 'none';
+
+        input.value = '';
+    }
+
+    async function sendFriendRequest(friendId) {
+        try {
+            const res = await fetch('/friends', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ friendId })
+            });
+            if (!res.ok) throw new Error('친구 맺기 실패');
+
+            alert('시간표를 확인할 수 있습니다.');
+            await loadFriends();
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
+    }
 </script>
 </body>
 </html>
