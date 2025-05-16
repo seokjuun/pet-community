@@ -5,7 +5,6 @@ const scheduleDetailModal = document.getElementById('scheduleDetailModal');
 // 일정 추가 모달
 document.getElementById('addScheduleBtn').addEventListener('click', function() {
     scheduleModal.style.display = 'block';
-    loadPets();
 });
 
 document.getElementById('closeScheduleModal').addEventListener('click', function() {

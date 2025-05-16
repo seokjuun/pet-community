@@ -35,11 +35,11 @@ public class FriendServiceImpl implements FriendService {
         }
         User user = optionalUser.get();
 
-        Optional<User> optionalFriend = userRepository.findById(userId);
+        Optional<User> optionalFriend = userRepository.findById(friendId);
         if(optionalFriend.isEmpty()){
-            throw new UserException.UserNotFoundException(userId);
+            throw new UserException.UserNotFoundException(friendId);
         }
-        User friend = optionalUser.get();
+        User friend = optionalFriend.get();
 
         FriendshipId id1 = new FriendshipId(userId, friendId);
         FriendshipId id2 = new FriendshipId(friendId, userId);
