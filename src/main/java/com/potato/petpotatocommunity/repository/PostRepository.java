@@ -103,9 +103,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         SELECT p.*
         FROM posts p
         LEFT JOIN post_likes pl ON p.post_id = pl.post_id
-        JOIN hashtag h ON p.hashtag_id = h.hashtag_id
+        JOIN common_codes c ON p.hashtag_id = c.code_id
         WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
-          AND h.code_id = :hashtagId
+          AND c.code_id = :hashtagId
         GROUP BY p.post_id
         ORDER BY COUNT(pl.post_id) DESC, p.created_at DESC
         """,
@@ -114,9 +114,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             SELECT p.post_id
             FROM posts p
             LEFT JOIN post_likes pl ON p.post_id = pl.post_id
-            JOIN hashtag h ON p.hashtag_id = h.hashtag_id
+            JOIN common_codes c ON p.hashtag_id = c.code_id
             WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
-              AND h.code_id = :hashtagId
+              AND c.code_id = :hashtagId
             GROUP BY p.post_id
         ) AS count_sub
         """,
