@@ -8,7 +8,7 @@ async function checkAuthStatus() {
             // 로그인 상태인 경우
             authButtons.innerHTML = `
                 <span style="margin-right: 10px;">${user.nickname || user.username}님</span>
-                <a href="mypage.html" class="btn btn-outline">마이페이지</a>
+                <a href="../mypage.html" class="btn btn-outline">마이페이지</a>
                 <button onclick="logout()" class="btn btn-primary">로그아웃</button>
             `;
         }
@@ -17,9 +17,6 @@ async function checkAuthStatus() {
     }
 }
 
-/**
- * 로그아웃 함수
- */
 async function logout() {
     try {
         const response = await fetch('/auth/logout', {
