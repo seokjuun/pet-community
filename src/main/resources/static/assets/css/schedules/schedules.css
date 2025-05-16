@@ -1,0 +1,132 @@
+/* Schedule Table */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.schedule-table th {
+    background-color: var(--light);
+    font-weight: 600;
+}
+
+.schedule-table .time-slot {
+    width: 12.5%;
+    font-weight: 500;
+    background-color: var(--light);
+}
+
+.schedule-empty {
+    color: #ccc;
+    font-style: italic;
+}
+
+.schedule-item {
+    background-color: #e8f4ff;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.schedule-item:hover {
+    background-color: #d1e9ff;
+}
+
+.schedule-item-time {
+    font-weight: 500;
+    color: var(--info);
+}
+
+.schedule-item-place {
+    font-weight: normal;
+    color: var(--dark);
+}
+
+.schedule-item-pet {
+    font-size: 13px;
+    color: #666;
+}
+
+/* 일정 상세 정보 */
+.detail-item {
+    margin-bottom: 15px;
+}
+
+.detail-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.detail-value {
+    display: block;
+    padding: 8px 12px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    min-height: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #f7d7e0;
+}
+
+/* 강아지 정보 섹션 스타일 */
+.pet-profile {
+    background-color: #fcf2f5;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #f7d7e0;
+    display: flex;
+    gap: 15px;
+}
+
+.pet-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e791a5;
+}
+
+.pet-info {
+    flex: 1;
+}
+
+.pet-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e791a5;
+    margin-bottom: 5px;
+}
+
+.pet-details {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 5px 10px;
+}
+
+.pet-detail-label {
+    font-weight: 600;
+    color: #666;
+}
+
+.pet-detail-value {
+    color: #333;
+}

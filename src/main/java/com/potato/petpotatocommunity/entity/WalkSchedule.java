@@ -33,10 +33,12 @@ public class WalkSchedule {
     private Integer dayOfWeek;
 
     @Column(nullable = false)
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 
     @Column(nullable = false)
-    private LocalTime endTime;
+    private LocalDateTime endTime;
+
+    private String timeSlot;
 
     private String location;
 

@@ -1,0 +1,87 @@
+/* Friend List */
+.friend-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.friend-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.friend-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.friend-header {
+    padding: 15px;
+    background-color: var(--light);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.friend-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #999;
+}
+
+.friend-info {
+    flex: 1;
+}
+
+.friend-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.friend-pets {
+    font-size: 14px;
+    color: #666;
+}
+
+.friend-body {
+    padding: 15px;
+}
+
+.friend-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.friend-schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.friend-duration {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.friend-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.back-to-friends-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+}

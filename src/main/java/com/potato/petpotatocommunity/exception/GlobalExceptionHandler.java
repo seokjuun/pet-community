@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,12 +50,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-
-    // 모든 예외 처리 (디버깅용)
+    // 모든 예외 처리
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다: " + e.getMessage());
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        ErrorResponse response = new ErrorResponse("INTERNAL_SERVER_ERROR", "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
     //    @ExceptionHandler(PostException.class)
 //    public ResponseEntity<String> handlePostException(PostException e) {
@@ -72,6 +72,7 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
     // 댓글 작성 예외
     @ExceptionHandler(CommentException.class)
     public ResponseEntity<CommentDetailResponse> handleCommentException(PostException e) {
@@ -82,5 +83,10 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordException(BusinessException e) {
+        ErrorResponse response = new ErrorResponse(e.getErrorCode(), e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }
 
