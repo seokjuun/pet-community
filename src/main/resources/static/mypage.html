@@ -324,7 +324,8 @@
 
         .pet-image {
             width: 100%;
-            height: 180px;
+            height: auto;
+            aspect-ratio: 4 / 3;
             overflow: hidden;
             position: relative;
             background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
@@ -337,6 +338,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
             transition: transform 0.5s ease;
         }
 
@@ -690,7 +692,7 @@
                                     </div>
                                     <div class="form-col">
                                         <div class="form-group">
-                                            <label for="petBreed">품종 (코드)</label>
+                                            <label for="petBreed">견/묘종 (코드)</label>
                                             <input type="text" id="petBreed" name="petBreed" class="form-control" required>
                                         </div>
                                     </div>
