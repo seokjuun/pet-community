@@ -50,7 +50,7 @@ public class PostServiceImpl implements PostService {
                 .title(request.getTitle())
                 .content(request.getContent())
                 .viewCount(0)
-                .likeCount(0)
+//                .likeCount(0)
                 .build();
 
         postRepository.save(post);
@@ -112,11 +112,6 @@ public class PostServiceImpl implements PostService {
                 .map(PostImage::getImageUrl)
                 .toList();
 
-        boolean isLiked = false;
-        if (user != null) {
-            isLiked = postLikeRepository.existsById(new PostLikeId(user.getUserId(), postId));
-        }
-
         post.setViewCount(post.getViewCount() + 1); // 조회수 증가
 
         PostDetailResponse response = PostDetailResponse.builder()
@@ -125,11 +120,13 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
                 .hashtagName(post.getHashtag().getCodeName())
+                .hashtagId(post.getHashtag().getCodeId())
                 .username(post.getUser().getUsername())
+                .userId(post.getUser().getUserId())
                 .createdAt(post.getCreatedAt())
                 .imageUrls(imageUrls)
-                .isLiked(isLiked)
-                .likeCount(post.getLikeCount())
+//                .isLiked(isLiked)
+//                .likeCount(post.getLikeCount())
                 .build();
 
         return PostResultDto.builder()
@@ -156,7 +153,15 @@ public class PostServiceImpl implements PostService {
         post.setHashtag(hashtag);
 
         postRepository.save(post);
-        postImageRepository.deleteByPost_PostId(postId);
+
+        // Handle deleted images (delete only those which client wants to remove)
+        List<String> deletedUrls = request.getDeletedImageUrls();
+        if (deletedUrls != null && !deletedUrls.isEmpty()) {
+            List<PostImage> toDelete = postImageRepository.findByPost_PostId(postId).stream()
+                    .filter(img -> deletedUrls.contains(img.getImageUrl()))
+                    .toList();
+            postImageRepository.deleteAll(toDelete);
+        }
 
         if (images != null && !images.isEmpty()) {
             if (images.size() > 5) throw new PostException("이미지는 최대 5장까지 업로드 가능합니다.");
@@ -201,22 +206,26 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResultDto getPosts(int page, int size, String keyword) {
+    public PostResultDto getPosts(int page, int size, String keyword, String hashtagId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Page<Post> posts;
-        if (keyword != null && !keyword.trim().isEmpty()) {
+        if (hashtagId != null && !hashtagId.trim().isEmpty()) {
+            posts = postRepository.findByHashtag_CodeIdWithFetch(hashtagId, pageable);
+        } else if (keyword != null && !keyword.trim().isEmpty()) {
             posts = postRepository.searchByKeyword(keyword, pageable);
         } else {
             posts = postRepository.findAll(pageable);
         }
 
+
         List<PostDetailResponse> postList = posts.stream().map(post -> PostDetailResponse.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
-                .content(post.getContent())
+//                .content(post.getContent())
                 .hashtagName(post.getHashtag().getCodeName())
                 .username(post.getUser().getUsername())
+                .userId(post.getUser().getUserId())
                 .viewCount(post.getViewCount())
                 .createdAt(post.getCreatedAt())
                 .build()).toList();
@@ -251,8 +260,10 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "Unknown")
                 .username(post.getUser() != null ? post.getUser().getUsername() : "Unknown")
+                .userId(post.getUser().getUserId())
                 .viewCount(post.getViewCount())
-                .likeCount(post.getPostLikes().size())
+//                .likeCount(post.getPostLikes().size())
+                .likeCount((long) (post.getPostLikes() != null ? post.getPostLikes().size() : 0))
                 .createdAt(post.getCreatedAt())
                 .build()).toList();
 
@@ -280,8 +291,10 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "Unknown")
                 .username(post.getUser() != null ? post.getUser().getUsername() : "Unknown")
+                .userId(post.getUser().getUserId())
                 .viewCount(post.getViewCount())
-                .likeCount(post.getPostLikes().size())
+//                .likeCount(post.getPostLikes().size())
+                .likeCount((long) (post.getPostLikes() != null ? post.getPostLikes().size() : 0))
                 .createdAt(post.getCreatedAt())
                 .build()).toList();
 
