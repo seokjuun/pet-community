@@ -195,12 +195,17 @@
                         <div class="form-group">
                             <label for="password">비밀번호 *</label>
                             <input type="password" id="password" name="password" class="form-control" required>
+                            <div id="passwordFeedback" class="error-message"></div>
+                            <div id="strengthBar" style="height: 6px; background-color: #eee; margin-top: 6px; border-radius: 4px; overflow: hidden;">
+                                <div id="strengthIndicator" style="width: 0; height: 100%; transition: width 0.3s;"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
                             <label for="confirmPassword">비밀번호 확인 *</label>
                             <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                            <div id="confirmFeedback" class="error-message"></div>
                         </div>
                     </div>
                 </div>
@@ -253,14 +258,14 @@
         e.preventDefault();
 
         // 비밀번호 확인 검증
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (password !== confirmPassword) {
-            document.getElementById('registerError').style.display = 'block';
-            document.getElementById('registerError').textContent = '비밀번호가 일치하지 않습니다.';
-            return;
-        }
+        // const password = document.getElementById('password').value;
+        // const confirmPassword = document.getElementById('confirmPassword').value;
+        //
+        // if (password !== confirmPassword) {
+        //     document.getElementById('registerError').style.display = 'block';
+        //     document.getElementById('registerError').textContent = '비밀번호가 일치하지 않습니다.';
+        //     return;
+        // }
 
         // 회원가입 데이터 수집
         const userData = {
@@ -300,6 +305,78 @@
                 document.getElementById('registerError').textContent = '회원가입 처리 중 오류가 발생했습니다.';
             });
     });
+
+    // 비밀번호 유효성 검증
+    document.getElementById('password').addEventListener('input', function () {
+        const password = this.value;
+        const feedback = document.getElementById('passwordFeedback');
+        const strengthBar = document.getElementById('strengthIndicator');
+
+        // 실시간 길이 검사
+        if (password.length < 8) {
+            feedback.textContent = "비밀번호는 최소 8자 이상이어야 합니다.";
+            feedback.style.display = 'block';
+        } else {
+            feedback.textContent = "";
+            feedback.style.display = 'none';
+        }
+
+        // 비밀번호 강도 평가
+        const strength = evaluatePasswordStrength(password);
+
+        // 강도 표시 색상과 길이 설정
+        switch (strength) {
+            case 'weak':
+                strengthBar.style.width = "33%";
+                strengthBar.style.backgroundColor = "#e74c3c"; // 빨강
+                break;
+            case 'medium':
+                strengthBar.style.width = "66%";
+                strengthBar.style.backgroundColor = "#f39c12"; // 주황
+                break;
+            case 'strong':
+                strengthBar.style.width = "100%";
+                strengthBar.style.backgroundColor = "#2ecc71"; // 초록
+                break;
+            default:
+                strengthBar.style.width = "0";
+                strengthBar.style.backgroundColor = "transparent";
+        }
+    });
+
+    function evaluatePasswordStrength(pw) {
+        let score = 0;
+        if (pw.length >= 8) score++;
+        if (/[A-Z]/.test(pw)) score++; // 대문자 포함
+        if (/[0-9]/.test(pw)) score++; // 숫자 포함
+        if (/[^A-Za-z0-9]/.test(pw)) score++; // 특수문자 포함
+
+        if (score <= 1) return "weak";
+        if (score === 2 || score === 3) return "medium";
+        return "strong";
+    }
+
+    // 실시간 비밀번호 일치 확인
+    document.getElementById('confirmPassword').addEventListener('input', function () {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+        const feedback = document.getElementById('confirmFeedback');
+
+        if (!confirmPassword) {
+            feedback.textContent = "";
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            feedback.textContent = "비밀번호가 일치하지 않습니다.";
+            feedback.style.display = 'block';
+        } else {
+            feedback.textContent = "";
+            feedback.style.display = 'none';
+        }
+    });
+
+
 </script>
 </body>
 </html>

@@ -38,7 +38,7 @@ public class Post {
 
     private int viewCount;
 
-    private int likeCount;
+//    private int likeCount;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

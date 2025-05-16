@@ -17,33 +17,33 @@
     <link rel="stylesheet" href="/assets/css/footer.css">
 
     <style>
-        /* Hero Section */
-        /*.hero {
-            padding: 60px 0;
-            background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/api/placeholder/1200/600');
-            background-size: cover;
-            background-position: center;
-            text-align: center;
+        /* 애니메이션 키프레임 정의 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .hero h1 {
-            font-size: 42px;
-            margin-bottom: 20px;
-            color: var(--dark);
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        .hero p {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        } */
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
 
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Hero Section - 레이아웃 수정 */
         .hero {
-            padding: 60px 0;
-            background-color: rgba(255, 138, 169, 0.1);
+            padding: 40px 0; /* 패딩 조금 키움 */
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             position: relative;
             overflow: hidden;
         }
@@ -52,181 +52,116 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-direction: row-reverse; /* 이미지를 오른쪽, 텍스트를 왼쪽으로 */
             flex-wrap: wrap;
         }
 
         .hero-text {
             flex: 1.2;
             min-width: 300px;
-            text-align: center;
+            text-align: left; /* 왼쪽 정렬 */
             padding-right: 30px;
             z-index: 2;
+            animation: slideInLeft 0.8s ease-out;
         }
 
         .hero-image {
             flex: 0.8;
-            min-width: 200px;
+            min-width: 150px;
+            max-width: 250px; /* 이미지 크기 약간 키움 */
             text-align: center;
             z-index: 2;
+            animation: slideInRight 0.8s ease-out;
         }
 
         .hero-image img {
             max-width: 100%;
-            border-radius: 20px;
-            box-shadow: none;
-            transition: transform 0.3s;
         }
 
-        /*.hero-image img:hover {
-            transform: scale(1.02);
-        } */
-
         .hero h1 {
-            font-size: 39px;
-            margin-bottom: 20px;
+            font-size: 32px;
+            margin-bottom: 15px;
             color: var(--dark);
+            font-family: 'Jua', sans-serif; /* 폰트 적용 */
         }
 
         .hero p {
-            font-size: 18px;
+            font-size: 16px;
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -100px;
-            right: -100px;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background-color: rgba(248, 165, 194, 0.1);
-            z-index: 1;
+        .hero .btn {
+            animation: pulse 2s infinite;
         }
 
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -100px;
-            left: -100px;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background-color: rgba(255, 143, 171, 0.1);
-            z-index: 1;
-        }
-
-        /* Featured Boards */
-        .featured-boards {
-            padding: 60px 0;
-            background-color: white;
+        /* Popular Posts - 레이아웃 수정 */
+        .popular-posts {
+            padding: 40px 0;
+            background-color: #f7f8fa;
+            border-top: 1px solid #eee;
         }
 
         .section-title {
-            text-align: center;
-            margin-bottom: 40px;
+            display: flex;
+            align-items: baseline; /* 기준선 정렬 */
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .section-title h2 {
-            font-size: 32px;
+            font-size: 28px;
             color: var(--dark);
-            margin-bottom: 10px;
+            margin-right: 15px;
+            margin-bottom: 0;
+            font-family: 'Jua', sans-serif; /* 폰트 적용 */
         }
 
         .section-title p {
             color: #777;
+            margin-bottom: 0;
         }
 
-        .boards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        .board-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .board-card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* i class 사용시 */
-        .board-image {
-            height: 180px;
-            background-color: #eee;
+        /* 카테고리 필터 스타일 개선 */
+        .category-filter {
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 30px;
-            color: var(--primary);
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        .board-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+        .category-btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            background-color: transparent;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
         }
 
-        /* image 사용시 */
-        /*.board-image {*/
-        /*    height: 180px;*/
-        /*    background-color: #f8f8f8; !* 배경색을 약간 밝게 변경 *!*/
-        /*    display: flex;*/
-        /*    align-items: center;*/
-        /*    justify-content: center;*/
-        /*    font-size: 30px;*/
-        /*    color: var(--primary);*/
-        /*    background-size: cover;*/
-        /*    background-position: center;*/
-        /*    border-radius: 8px 8px 0 0; !* 상단 모서리 둥글게 처리 *!*/
-        /*    position: relative;*/
-        /*    overflow: hidden;*/
-        /*}*/
-
-        /*!* 이미지 위에 약간의 어두운 오버레이를 추가하여 텍스트 가독성 향상 *!*/
-        /*.board-image::after {*/
-        /*    content: '';*/
-        /*    position: absolute;*/
-        /*    top: 0;*/
-        /*    left: 0;*/
-        /*    width: 100%;*/
-        /*    height: 100%;*/
-        /*    background: rgba(0, 0, 0, 0.2);*/
-        /*    z-index: 1;*/
-        /*}*/
-
-        .board-content {
-            padding: 20px;
+        .category-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
-        .board-content h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
+        .category-btn.active {
+            background-color: var(--primary);
+            color: white;
         }
 
-        .board-content p {
-            color: #777;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        /* Popular Posts */
-        .popular-posts {
-            padding: 60px 0;
-            background-color: var(--light);
-        }
-
+        /* 게시글 리스트 애니메이션 */
         .posts-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            max-width: 900px; /* 최대 너비 제한으로 여백 조정 */
+            margin: 0 auto; /* 중앙 정렬 */
         }
 
         .post-item {
@@ -236,12 +171,36 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        /* 게시글 차례로 나타나는 효과 */
+        .post-item:nth-child(1) { animation-delay: 0.1s; }
+        .post-item:nth-child(2) { animation-delay: 0.2s; }
+        .post-item:nth-child(3) { animation-delay: 0.3s; }
+        .post-item:nth-child(4) { animation-delay: 0.4s; }
+        .post-item:nth-child(5) { animation-delay: 0.5s; }
+        .post-item:nth-child(6) { animation-delay: 0.6s; }
+        .post-item:nth-child(7) { animation-delay: 0.7s; }
+        .post-item:nth-child(8) { animation-delay: 0.8s; }
+
+        .post-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
 
         .post-stats {
             margin-right: 20px;
             text-align: center;
             min-width: 80px;
+            transition: transform 0.3s;
+        }
+
+        .post-item:hover .post-stats {
+            transform: scale(1.1);
         }
 
         .post-views {
@@ -255,9 +214,19 @@
             color: #777;
         }
 
+        .post-content {
+            flex: 1;
+        }
+
         .post-content h3 {
             font-size: 18px;
             margin-bottom: 8px;
+            color: var(--dark);
+            transition: color 0.3s;
+        }
+
+        .post-item:hover .post-content h3 {
+            color: var(--primary);
         }
 
         .post-meta {
@@ -265,9 +234,25 @@
             font-size: 13px;
             color: #777;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
-        /* Media Queries */
+        .no-posts {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            color: #777;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* 반응형 스타일 */
         @media (max-width: 768px) {
             .header-main .container {
                 flex-direction: column;
@@ -285,23 +270,38 @@
             }
 
             .hero h1 {
-                font-size: 32px;
+                font-size: 26px;
             }
 
             .hero-content {
-                flex-direction: column;
+                flex-direction: column-reverse; /* 모바일에서는 이미지가 위, 텍스트가 아래로 */
             }
 
             .hero-text {
                 text-align: center;
                 padding-right: 0;
-                margin-bottom: 30px;
+                margin-top: 20px;
             }
 
-            .hero h1 {
-                font-size: 32px;
+            .section-title {
+                flex-direction: column;
+                text-align: center;
             }
 
+            .section-title h2 {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+
+            .category-filter {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+
+            .post-stats {
+                min-width: 60px;
+            }
         }
     </style>
 </head>
@@ -337,15 +337,7 @@
     </div>
 </header>
 
-<!-- Hero Section -->
-<!-- <section class="hero">
-    <div class="container">
-        <h1>반려동물과 함께하는 행복한 커뮤니티</h1>
-        <p>펫 포테이토에서 다양한 반려동물 정보를 공유하고, 소통하며, 함께 성장해보세요. 당신의 소중한 반려동물에 대한 모든 것이 여기에 있습니다.</p>
-        <a href="boards/free.html" class="btn btn-primary">커뮤니티 둘러보기</a>
-    </div>
-</section> -->
-
+<!-- Hero Section - 수정됨 -->
 <section class="hero">
     <div class="container">
         <div class="hero-content">
@@ -354,135 +346,33 @@
             </div>
             <div class="hero-text">
                 <h1>반려동물과 함께하는 행복한 커뮤니티</h1>
-                <p>펫 포테이토에서 다양한 반려동물 정보를 공유하고, 소통하며, 함께 성장해보세요. 당신의 소중한 반려동물에 대한 모든 것이 여기에 있습니다.</p>
+                <p>펫 포테이토에서 다양한 반려동물 정보를 공유하고, 소통하며, 함께 성장해보세요.</p>
                 <a href="boards/free.html" class="btn btn-primary">커뮤니티 둘러보기</a>
             </div>
-
         </div>
     </div>
 </section>
 
-<!-- Featured Boards -->
-<section class="featured-boards">
-    <div class="container">
-        <div class="section-title">
-            <h2>인기 게시판</h2>
-            <p>다양한 주제의 게시판에서 반려동물과 관련된 정보를 나눠보세요</p>
-        </div>
-        <div class="boards-grid">
-            <div class="board-card">
-                <div class="board-image">
-<!--                    <i class="fas fa-comments"></i>-->
-<!--                    <div class="board-image" style="background-image: url('/assets/image/blog-large.jpg');">-->
-                    <img src="/assets/image/blog-large.jpg" alt="자유게시판 이미지" />
-                </div>
-                <div class="board-content">
-                    <h3>자유게시판</h3>
-                    <p>일상, 고민, 추억 등 자유롭게 이야기를 나눌 수 있는 공간입니다.</p>
-                    <a href="boards/free.html" class="btn btn-outline">바로가기</a>
-                </div>
-            </div>
-            <div class="board-card">
-                <div class="board-image">
-<!--                    <i class="fas fa-cut"></i>-->
-                    <img src="/assets/image/puppy.jpg" alt="미용게시판 이미지" />
-                </div>
-                <div class="board-content">
-                    <h3>미용 게시판</h3>
-                    <p>반려동물 미용과 관련된 질문, 정보, 경험을 공유하는 공간입니다.</p>
-                    <a href="boards/beauty.html" class="btn btn-outline">바로가기</a>
-                </div>
-            </div>
-            <div class="board-card">
-                <div class="board-image">
-<!--                    <i class="fas fa-stethoscope"></i>-->
-                    <img src="/assets/image/medi.jpg" alt="의료게시판 이미지" />
-                </div>
-                <div class="board-content">
-                    <h3>의료 게시판</h3>
-                    <p>반려동물 건강과 의료 정보를 나누고 질문할 수 있는 공간입니다.</p>
-                    <a href="boards/medical.html" class="btn btn-outline">바로가기</a>
-                </div>
-            </div>
-            <div class="board-card">
-                <div class="board-image">
-<!--                    <i class="fas fa-paw"></i>-->
-                    <img src="/assets/image/insta4.jpg" alt="산책게시판 이미지" />
-                </div>
-                <div class="board-content">
-                    <h3>산책 게시판</h3>
-                    <p>산책 코스, 주의사항, 추천 장소 등 산책에 관한 정보를 공유합니다.</p>
-                    <a href="boards/walking.html" class="btn btn-outline">바로가기</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Popular Posts -->
+<!-- Popular Posts 섹션 - 레이아웃 수정됨 -->
 <section class="popular-posts">
     <div class="container">
         <div class="section-title">
             <h2>인기 게시글</h2>
-            <p>회원들이 많이 읽고 관심을 가진 인기 게시글을 확인해보세요</p>
+            <p>48시간 이내의 인기 게시글을 확인해보세요.</p>
         </div>
+
+        <!-- 카테고리 필터 -->
+        <div class="category-filter">
+            <button class="category-btn active" data-category="all">전체</button>
+            <button class="category-btn" data-category="CATEGORY_GENERAL">자유</button>
+            <button class="category-btn" data-category="CATEGORY_GROOMING">미용</button>
+            <button class="category-btn" data-category="CATEGORY_HOSPITAL">의료</button>
+            <button class="category-btn" data-category="CATEGORY_WALK">산책</button>
+        </div>
+
+        <!-- 게시글 목록 -->
         <div class="posts-list" id="popular-posts-list">
-<!--            <div class="post-item">-->
-<!--                <div class="post-stats">-->
-<!--                    <div class="post-views">128</div>-->
-<!--                    <div class="post-likes">좋아요 24</div>-->
-<!--                </div>-->
-<!--                <div class="post-content">-->
-<!--                    <h3>강아지 겨울철 피부관리, 이것만 알면 된다!</h3>-->
-<!--                    <div class="post-meta">-->
-<!--                        <span><i class="fas fa-user"></i> 멍멍이맘</span>-->
-<!--                        <span><i class="fas fa-folder"></i> 미용</span>-->
-<!--                        <span><i class="fas fa-clock"></i> 3일 전</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="post-item">-->
-<!--                <div class="post-stats">-->
-<!--                    <div class="post-views">114</div>-->
-<!--                    <div class="post-likes">좋아요 21</div>-->
-<!--                </div>-->
-<!--                <div class="post-content">-->
-<!--                    <h3>우리 동네 숨은 반려동물 친화 카페 추천합니다</h3>-->
-<!--                    <div class="post-meta">-->
-<!--                        <span><i class="fas fa-user"></i> 행복한고양이</span>-->
-<!--                        <span><i class="fas fa-folder"></i> 자유</span>-->
-<!--                        <span><i class="fas fa-clock"></i> 5일 전</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="post-item">-->
-<!--                <div class="post-stats">-->
-<!--                    <div class="post-views">98</div>-->
-<!--                    <div class="post-likes">좋아요 18</div>-->
-<!--                </div>-->
-<!--                <div class="post-content">-->
-<!--                    <h3>강아지 예방접종 시기와 종류, 알아두세요!</h3>-->
-<!--                    <div class="post-meta">-->
-<!--                        <span><i class="fas fa-user"></i> 바론파파</span>-->
-<!--                        <span><i class="fas fa-folder"></i> 의료</span>-->
-<!--                        <span><i class="fas fa-clock"></i> 1주일 전</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="post-item">-->
-<!--                <div class="post-stats">-->
-<!--                    <div class="post-views">85</div>-->
-<!--                    <div class="post-likes">좋아요 16</div>-->
-<!--                </div>-->
-<!--                <div class="post-content">-->
-<!--                    <h3>한강공원 애견 산책로 시설 확충! 이제 더 편하게 산책하세요</h3>-->
-<!--                    <div class="post-meta">-->
-<!--                        <span><i class="fas fa-user"></i> 산책러버</span>-->
-<!--                        <span><i class="fas fa-folder"></i> 산책</span>-->
-<!--                        <span><i class="fas fa-clock"></i> 1주일 전</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="loading">게시글을 불러오는 중입니다...</div>
         </div>
     </div>
 </section>
@@ -517,81 +407,63 @@
             .catch(error => {
                 console.error('로그인 상태 확인 오류:', error);
             });
-    });
 
-    // 로그아웃 함수
-    function logout() {
-        fetch('/auth/logout', {
-            method: 'POST'
-        })
-            .then(response => response.text())
-            .then(result => {
-                if (result === 'logout success') {
-                    alert('로그아웃 되었습니다.');
-                    window.location.href = 'index.html';
-                }
+        // 로그아웃 함수
+        window.logout = function() {
+            fetch('/auth/logout', {
+                method: 'POST'
             })
-            .catch(error => {
-                console.error('로그아웃 오류:', error);
-            });
-    }
+                .then(response => response.text())
+                .then(result => {
+                    if (result === 'logout success') {
+                        alert('로그아웃 되었습니다.');
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('로그아웃 오류:', error);
+                });
+        }
 
-    // 인기 게시글 불러오기 함수
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     fetch("/api/posts/popular?limit=4")
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             const container = document.getElementById("popular-posts-list");
-    //
-    //             data.forEach(post => {
-    //                 const item = document.createElement("div");
-    //                 item.className = "post-item";
-    //                 item.innerHTML = `
-    //                 <div class="post-stats">
-    //                     <div class="post-views">${post.viewCount}</div>
-    //                     <div class="post-likes">좋아요 ${post.likeCount}</div>
-    //                 </div>
-    //                 <div class="post-content">
-    //                     <h3>${post.title}</h3>
-    //                     <div class="post-meta">
-    //                         <span><i class="fas fa-user"></i> ${post.username}</span>
-    //                         <span><i class="fas fa-folder"></i> ${post.hashtagName}</span>
-    //                         <span><i class="fas fa-clock"></i> ${timeSince(post.createdAt)}</span>
-    //                     </div>
-    //                 </div>
-    //             `;
-    //                 container.appendChild(item);
-    //             });
-    //         })
-    //         .catch(error => {
-    //             console.error("인기 게시글 불러오기 실패:", error);
-    //         });
-    //
-    //     // 시간 경과 텍스트 함수 (예: "3일 전")
-    //     function timeSince(dateString) {
-    //         const date = new Date(dateString);
-    //         const now = new Date();
-    //         const diffMs = now - date;
-    //         const diffSec = Math.floor(diffMs / 1000);
-    //         const diffMin = Math.floor(diffSec / 60);
-    //         const diffHour = Math.floor(diffMin / 60);
-    //         const diffDay = Math.floor(diffHour / 24);
-    //
-    //         if (diffDay > 0) return `${diffDay}일 전`;
-    //         if (diffHour > 0) return `${diffHour}시간 전`;
-    //         if (diffMin > 0) return `${diffMin}분 전`;
-    //         return "방금 전";
-    //     }
-    // });
-    document.addEventListener('DOMContentLoaded', function() {
-        loadPopularPosts();
+        // 초기 인기 게시글 로드 (전체 카테고리)
+        loadPopularPosts('all');
+
+        // 카테고리 버튼 이벤트 리스너 설정
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 활성화된 버튼 스타일 적용
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // 선택된 카테고리의 게시글 로드
+                const category = this.getAttribute('data-category');
+                loadPopularPosts(category);
+            });
+        });
     });
 
-    function loadPopularPosts() {
-        fetch('/api/posts/popular?page=0&size=4')
-            .then(response => response.json())
+    // 인기 게시글 불러오기 함수 (카테고리별 필터링 추가)
+    function loadPopularPosts(category) {
+        const postsListContainer = document.getElementById('popular-posts-list');
+        postsListContainer.innerHTML = '<div class="loading">게시글을 불러오는 중입니다...</div>';
+
+        // 기본 API URL 설정
+        let apiUrl = '/api/posts/popular?page=0&size=8';
+
+        // 카테고리가 전체가 아닌 경우 해당 카테고리만 필터링
+        if (category !== 'all') {
+            apiUrl = `/api/posts/popular/hashtag/${category}?page=0&size=8`;
+        }
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
-                const postsListContainer = document.querySelector('.posts-list');
                 postsListContainer.innerHTML = '';
 
                 if (data.postList && data.postList.length > 0) {
@@ -600,12 +472,11 @@
                         postsListContainer.appendChild(postElement);
                     });
                 } else {
-                    postsListContainer.innerHTML = '<div class="no-posts">인기 게시글이 없습니다.</div>';
+                    postsListContainer.innerHTML = '<div class="no-posts">해당 카테고리의 인기 게시글이 없습니다.</div>';
                 }
             })
             .catch(error => {
                 console.error('인기 게시글을 불러오는 중 오류가 발생했습니다:', error);
-                const postsListContainer = document.querySelector('.posts-list');
                 postsListContainer.innerHTML = '<div class="no-posts">게시글을 불러오는 중 오류가 발생했습니다.</div>';
             });
     }
@@ -615,19 +486,15 @@
         const createdDate = new Date(post.createdAt);
         const now = new Date();
         const diffTime = Math.abs(now - createdDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
 
         let timeAgo;
-        if (diffDays === 0) {
-            timeAgo = '오늘';
-        } else if (diffDays === 1) {
-            timeAgo = '어제';
-        } else if (diffDays < 7) {
-            timeAgo = diffDays + '일 전';
-        } else if (diffDays < 30) {
-            timeAgo = Math.floor(diffDays / 7) + '주 전';
+        if (diffHours < 1) {
+            timeAgo = '방금 전';
+        } else if (diffHours < 24) {
+            timeAgo = diffHours + '시간 전';
         } else {
-            timeAgo = Math.floor(diffDays / 30) + '달 전';
+            timeAgo = Math.floor(diffHours / 24) + '일 전';
         }
 
         // Create post item container
@@ -645,7 +512,8 @@
 
         const postLikes = document.createElement('div');
         postLikes.className = 'post-likes';
-        postLikes.innerHTML = '<i class="fas fa-heart"></i> ' + post.likeCount;
+        // likeCount 필드 사용 (백엔드 응답에 맞춰 조정)
+        postLikes.innerHTML = '<i class="fas fa-heart"></i> ' + (post.likeCount || 0);
 
         postStats.appendChild(postViews);
         postStats.appendChild(postLikes);
