@@ -242,10 +242,10 @@ function updateModalWithData(data) {
     // 강아지 이미지
     const petImage = document.getElementById('pet-image');
     if (data.pet.imageUrl) {
-        petImage.src = '/assets/image/' + data.pet.imageUrl;
+        petImage.src = data.pet.imageUrl;
         petImage.alt = data.pet.name;
     } else {
-        petImage.src = '/image/puppy.jpg'; // 기본 이미지
+        petImage.src = '/assets/image/default-dog.png'; // 기본 이미지
     }
 }
 
