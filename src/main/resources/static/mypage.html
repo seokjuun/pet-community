@@ -1044,7 +1044,7 @@
 <!--                                <div class="post-likes"><i class="fas fa-heart"></i> ${post.likeCount}</div>-->
                             </div>
                             <div class="post-content">
-                                <h3><a href="/boards/post/${post.postId}">${post.title}</a></h3>
+                                <h3><a href="/boards/view.html?id=${post.postId}">${post.title}</a></h3>
                                 <div class="post-meta">
                                     <span><i class="fas fa-folder"></i> ${post.hashtagName}</span>
                                     <span><i class="fas fa-comment"></i> ${post.commentCount}</span>
@@ -1089,7 +1089,7 @@
 <!--                                <div class="comment-likes"><i class="fas fa-heart"></i> ${comment.likeCount}</div>-->
                             </div>
                             <div class="comment-content">
-                                <h3><a href="/boards/post/${comment.postId}">${comment.postTitle}</a></h3>
+                                <h3><a href="/boards/view.html?id=${comment.postId}">${comment.postTitle}</a></h3>
                                 <div class="comment-text">${comment.content}</div>
                                 <div class="comment-meta">
                                     <span><i class="fas fa-clock"></i> ${comment.timeAgo}</span>
