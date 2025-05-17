@@ -12,8 +12,13 @@ async function checkAuthStatus() {
                 <button onclick="logout()" class="btn btn-primary">로그아웃</button>
             `;
         }
+        else {
+            // 로그인 상태가 아닌 경우 홈으로 리디렉션
+            window.location.href = '/login.html';
+        }
     } catch (error) {
         console.error('로그인 상태 확인 오류:', error);
+        window.location.href = '/login.html';
     }
 }
 
