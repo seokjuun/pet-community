@@ -287,11 +287,9 @@
         <div class="container">
             <a href="/index.html" class="logo">Pet Potato</a>
             <ul class="nav-menu">
-                <li><a href="/index.html">홈</a></li>
-                <li><a href="/boards/free.html">자유게시판</a></li>
-                <li><a href="/boards/beauty.html">미용</a></li>
-                <li><a href="/boards/medical.html">의료</a></li>
-                <li><a href="/boards/walking.html">산책</a></li>
+                <li><a href="../index.html">홈</a></li>
+                <li><a href="/boards/free.html">커뮤니티</a></li>
+                <li><a href="/boards/schedules.html">산책 시간표</a></li>
             </ul>
             <div class="auth-buttons" id="authButtons">
                 <a href="/login.html" class="btn btn-outline">로그인</a>
@@ -377,7 +375,7 @@
                     // 로그인 상태인 경우
                     authButtons.innerHTML = `
                             <span style="margin-right: 10px;">${user.nickname || user.username}님</span>
-                            <a href="mypage.html" class="btn btn-outline">마이페이지</a>
+                            <a href="../mypage.html" class="btn btn-outline">마이페이지</a>
                             <button onclick="logout()" class="btn btn-primary">로그아웃</button>
                         `;
                 }
