@@ -1,11 +1,11 @@
 package com.potato.petpotatocommunity.dto.user;
 
+import lombok.Builder;
 import lombok.Data;
 
 // 회원가입, 사용자 정보 전송 DTO
 
 @Data
-
 public class UserDto {
     private Long userId;         // 사용자 ID
     private String email;       // 이메일
