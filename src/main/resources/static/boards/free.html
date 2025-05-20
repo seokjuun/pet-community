@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 - 펫 포테이토 커뮤니티</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="stylesheet" href="/assets/css/header.css">
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <link rel="stylesheet" href="/assets/css/button.css">
+    <link rel="stylesheet" href="/assets/css/footer.css">
+
+    <style>
+        /* Board Header */
+        .board-header {
+            background-color: var(--light);
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        .board-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .board-header p {
+            color: #777;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-input {
+            display: flex;
+            width: 50%;
+        }
+
+        .search-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px 0 0 25px;
+            outline: none;
+        }
+
+        .search-input button {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+        }
+
+        /* Post List */
+        .post-list {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .post-list-header {
+            display: grid;
+            grid-template-columns: 80px 1fr 150px 120px 100px;
+            background-color: #f8f8f8;
+            padding: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post-item {
+            display: grid;
+            grid-template-columns: 80px 1fr 150px 120px 100px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .post-num {
+            text-align: center;
+        }
+
+        .post-title {
+            font-weight: 500;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .post-title:hover {
+            color: var(--primary);
+        }
+
+        .post-author, .post-date {
+            color: #777;
+            text-align: center;
+        }
+
+        .post-views {
+            text-align: center;
+        }
+
+        .post-tag {
+            display: inline-block;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #eef;
+            color: #77a;
+            margin-right: 5px;
+        }
+        .post-tag.tag-general {
+            background-color: #e7f3ff;
+            color: #2a6f97;
+        }
+        .post-tag.tag-grooming {
+            background-color: #fff0f5;
+            color: #d63384;
+        }
+        .post-tag.tag-hospital {
+            background-color: #f0fff4;
+            color: #2f9e44;
+        }
+        .post-tag.tag-walk {
+            background-color: #fffbe6;
+            color: #f08c00;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .pagination-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            border-radius: 50%;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+
+        .pagination-item:hover {
+            background-color: #eee;
+        }
+
+        .pagination-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .write-btn-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .header-main .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-menu {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+
+            .nav-menu li {
+                margin: 0 10px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .post-list-header {
+                display: none;
+            }
+
+            .post-item {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .post-num, .post-author, .post-date, .post-views {
+                text-align: left;
+                font-size: 14px;
+                color: #777;
+            }
+
+            .post-title {
+                font-size: 18px;
+                margin: 5px 0;
+            }
+
+            .post-meta {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-top">
+        <div class="container">
+            <div class="header-contact">
+                <span><i class="fas fa-phone"></i> +82 10-1717-6288</span>
+                <span><i class="fas fa-envelope"></i> info@petpotato.com</span>
+            </div>
+            <div class="header-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="header-main">
+        <div class="container">
+            <a href="/index.html" class="logo">Pet Potato</a>
+            <ul class="nav-menu">
+                <li><a href="../index.html">홈</a></li>
+                <li><a href="free.html">커뮤니티</a></li>
+                <li><a href="schedules.html">산책 시간표</a></li>
+            </ul>
+            <div class="auth-buttons" id="authButtons">
+                <a href="/login.html" class="btn btn-outline">로그인</a>
+                <a href="/register.html" class="btn btn-primary">회원가입</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Board Header -->
+<section class="board-header">
+    <div class="container">
+        <h1 id="board-title">게시판</h1>
+        <p id="board-description">펫 포테이토 커뮤니티의 게시글을 볼 수 있습니다.</p>
+    </div>
+</section>
+
+<!-- Board Content -->
+<section class="board-content">
+    <div class="container">
+        <div class="search-bar">
+            <div class="search-input">
+                <input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+                <button id="searchButton"><i class="fas fa-search"></i> 검색</button>
+            </div>
+            <div class="write-btn-container">
+                <a href="/boards/write.html" class="btn btn-primary">글쓰기</a>
+            </div>
+        </div>
+        <br>
+        <!-- 카테고리 필터 버튼 -->
+        <div class="btn-group filter-buttons mb-3" role="group">
+            <button class="btn btn-outline-primary" data-category="POPULAR">🔥인기글</button>
+            <button class="btn btn-outline-primary" data-category="ALL">전체</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_GENERAL">자유</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_GROOMING">미용</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_HOSPITAL">의료</button>
+            <button class="btn btn-outline-primary" data-category="CATEGORY_WALK">산책</button>
+        </div>
+        <br>
+        <div class="post-list">
+            <div class="post-list-header">
+                <div class="post-num">번호</div>
+                <div>제목</div>
+                <div class="post-author">작성자</div>
+                <div class="post-date">작성일</div>
+                <div class="post-views">조회수</div>
+            </div>
+            <div id="postItemsContainer"></div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </div>
+</section>
+
+<script>
+    let currentCategory = 'ALL';
+
+    // 로그인 상태에 따라 버튼 변경
+    document.addEventListener('DOMContentLoaded', function() {
+        // API 호출하여 현재 로그인 상태 확인
+        fetch('/auth/me')
+            .then(response => response.json())
+            .then(user => {
+                const authButtons = document.getElementById('authButtons');
+
+                if (user && user.userId) {
+                    // 로그인 상태인 경우
+                    authButtons.innerHTML = `
+                            <span style="margin-right: 10px;">${user.nickname || user.username}님</span>
+                            <a href="mypage.html" class="btn btn-outline">마이페이지</a>
+                            <button onclick="logout()" class="btn btn-primary">로그아웃</button>
+                        `;
+                }
+            })
+            .catch(error => {
+                console.error('로그인 상태 확인 오류:', error);
+            });
+
+
+    });
+
+    function logout() {
+        fetch('/auth/logout', {
+            method: 'POST'
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'logout success') {
+                    alert('로그아웃 되었습니다.');
+                    window.location.href = '/index.html';
+                }
+            })
+            .catch(error => {
+                console.error('로그아웃 오류:', error);
+                alert('로그아웃에 실패했습니다.');
+            });
+    }
+
+    function getCategoryFromUrl() {
+        const params = new URLSearchParams(location.search);
+        return params.get('category') || 'ALL';
+    }
+
+    function setActiveButton() {
+        document.querySelectorAll('.filter-buttons button').forEach(btn => {
+            btn.classList.remove('active', 'btn-primary');
+            btn.classList.add('btn-outline-primary');
+            if (btn.dataset.category === currentCategory) {
+                btn.classList.add('active', 'btn-primary');
+                btn.classList.remove('btn-outline-primary');
+            }
+        });
+    }
+
+    async function fetchPosts(page = 0, size = 10, keyword = '') {
+        let url = '';
+        if (currentCategory === 'POPULAR') {
+            url = `/api/posts/popular?page=${page}&size=${size}`;
+        } else {
+            url = `/api/posts?page=${page}&size=${size}`;
+            if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+            if (currentCategory !== 'ALL') url += `&hashtagId=${currentCategory}`;
+        }
+
+        const response = await fetch(url);
+        return await response.json();
+    }
+
+    function renderPosts(posts) {
+        const container = document.getElementById('postItemsContainer');
+        container.innerHTML = '';
+        if (!posts || posts.length === 0) {
+            container.innerHTML = '<div class="post-item" style="text-align: center;">게시글이 없습니다.</div>';
+            return;
+        }
+        posts.forEach(post => {
+            const el = document.createElement('div');
+            el.className = 'post-item';
+            el.innerHTML = `
+                <div class="post-num">${post.postId}</div>
+                <div>
+                    <span class="post-tag ${getTagClass(post.hashtagName)}">${post.hashtagName}</span>
+                    <a href="/boards/view.html?id=${post.postId}" class="post-title">${post.title}</a>
+                </div>
+                <div class="post-author">${post.username}</div>
+                <div class="post-date">${formatDate(post.createdAt)}</div>
+                <div class="post-views">${post.viewCount}</div>
+            `;
+            container.appendChild(el);
+        });
+    }
+    function getTagClass(name) {
+        switch (name) {
+            case '자유': return 'tag-general';
+            case '미용': return 'tag-grooming';
+            case '의료': return 'tag-hospital';
+            case '산책': return 'tag-walk';
+            default: return '';
+        }
+    }
+
+    function renderPagination(currentPage, totalCount, size) {
+        const pagination = document.getElementById('pagination');
+        const totalPages = Math.ceil(totalCount / size);
+        pagination.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+            const el = document.createElement('a');
+            el.href = '#';
+            el.className = 'pagination-item' + (i === currentPage ? ' active' : '');
+            el.textContent = i + 1;
+            el.onclick = e => {
+                e.preventDefault();
+                loadPage(i);
+            };
+            pagination.appendChild(el);
+        }
+    }
+
+    async function loadPage(page = 0) {
+        const keyword = document.getElementById('searchInput').value.trim();
+        const data = await fetchPosts(page, 10, keyword);
+        renderPosts(data.postList);
+        renderPagination(page, data.count || 0, 10);
+
+        const params = new URLSearchParams();
+        params.set('category', currentCategory);
+        history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        if (date.toDateString() === now.toDateString()) {
+            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        }
+        return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
+
+    function setupCategoryButtons() {
+        document.querySelectorAll('.filter-buttons button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentCategory = btn.dataset.category;
+                setActiveButton();
+                loadPage(0);
+            });
+        });
+    }
+
+    function setupSearch() {
+        document.getElementById('searchButton').onclick = () => loadPage(0);
+        document.getElementById('searchInput').onkeydown = (e) => {
+            if (e.key === 'Enter') loadPage(0);
+        };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        currentCategory = getCategoryFromUrl();
+        setActiveButton();
+        setupCategoryButtons();
+        setupSearch();
+        loadPage(0);
+    });
+</script>
+
+</body>
+</html>
