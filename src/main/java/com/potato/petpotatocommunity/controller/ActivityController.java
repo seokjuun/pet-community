@@ -1,7 +1,11 @@
 package com.potato.petpotatocommunity.controller;
 
+import com.potato.petpotatocommunity.dto.code.CodeDto;
+import com.potato.petpotatocommunity.entity.Code;
+import com.potato.petpotatocommunity.entity.CommonCode;
 import com.potato.petpotatocommunity.exception.UnauthorizedException;
 import com.potato.petpotatocommunity.dto.user.*;
+import com.potato.petpotatocommunity.repository.CodeRepository;
 import com.potato.petpotatocommunity.service.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +25,7 @@ import java.util.List;
 public class ActivityController {
 
     private final ActivityService activityService;
+    private final CodeRepository codeRepository;
 
     @Operation(
             summary = "내 게시글 목록 조회",
@@ -88,4 +93,15 @@ public class ActivityController {
 
         return ResponseDto.success(stats);
     }
+
+    // 견종 드롭다운용
+    @GetMapping("/breeds")
+    public ResponseDto<List<CodeDto>> getBreedCodes() {
+        List<Code> breedCodes = codeRepository.findByGroupCode("200");
+        List<CodeDto> result = breedCodes.stream()
+                .map(code -> new CodeDto(code.getGroupCode(), code.getCode(), code.getCodeName()))
+                .toList();
+        return ResponseDto.success(result);
+    }
+
 }
