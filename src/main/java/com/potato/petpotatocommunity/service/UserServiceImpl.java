@@ -1,9 +1,12 @@
 package com.potato.petpotatocommunity.service;
 
+import com.potato.petpotatocommunity.entity.Code;
+import com.potato.petpotatocommunity.entity.key.CodeKey;
 import com.potato.petpotatocommunity.exception.PasswordException;
 import com.potato.petpotatocommunity.dto.user.UserDto;
 import com.potato.petpotatocommunity.dto.user.UserProfileDto;
 import com.potato.petpotatocommunity.entity.User;
+import com.potato.petpotatocommunity.repository.CodeRepository;
 import com.potato.petpotatocommunity.repository.UserRepository;
 import com.potato.petpotatocommunity.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +22,22 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
+    private final CodeRepository codeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void signUp(UserDto dto) {
-        CommonCode role = userRoleRepository.findByCodeId(dto.getRoleId());
+        CodeKey codeKey = new CodeKey(dto.getGroupCodeId(), dto.getCodeId());
+        Code role = codeRepository.findById(codeKey)
+                .orElseThrow(() -> new NoSuchElementException("역할 코드가 존재하지 않습니다."));
 
         User user = User.builder()
                 .email(dto.getEmail())
                 .username(dto.getUsername())
                 .nickname(dto.getNickname())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .role(role)
+                .roleCodeKey(codeKey)  // 복합키 직접 저장
+                .role(role)            // 연관 객체 주입 (읽기 전용)
                 .phone(dto.getPhone())
                 .info(dto.getInfo())
                 .profileImage(dto.getProfileImage())
@@ -38,6 +45,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
+
 
 //    @Override
 //    public UserDto findByEmail(String email) {
@@ -127,7 +135,11 @@ public class UserServiceImpl implements UserService {
         dto.setUsername(user.getUsername());
         dto.setNickname(user.getNickname());
         dto.setPassword(user.getPassword());
-        dto.setRoleId(user.getRole().getCodeId());
+
+        if (user.getRoleCodeKey() != null) {
+            dto.setGroupCodeId(user.getRoleCodeKey().getGroupCode());
+            dto.setCodeId(user.getRoleCodeKey().getCode());
+        }
         dto.setPhone(user.getPhone());
         dto.setInfo(user.getInfo());
         dto.setProfileImage(user.getProfileImage());

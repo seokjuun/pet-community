@@ -12,7 +12,9 @@ public class UserDto {
     private String username;    // 사용자명
     private String password;    // 비밀번호
     private String nickname;    // 닉네임
-    private String roleId;      // 역할 ID (CommonCode의 codeId)
+    //private String roleId;      // 역할 ID (CommonCode의 codeId)
+    private String groupCodeId;  // ex: "100" (운영역할)
+    private String codeId;       // ex: "001" (관리자, 유저 등)
     private String phone;       // 전화번호
     private String info;        // 간단한 소개
     private String profileImage; // 프로필 이미지 URL

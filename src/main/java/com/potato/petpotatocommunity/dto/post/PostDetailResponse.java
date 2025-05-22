@@ -17,6 +17,8 @@ public class PostDetailResponse {
     private int viewCount;
     private String hashtagName;
     private String hashtagId;
+//    private String groupCodeId;     // post.getHashtagcode().getCodeKey().getGroupCode()
+//    private String codeId;          // post.getHashtagcode().getCodeKey().getCode()
     private String username;
     private Long userId;
     private LocalDateTime createdAt;

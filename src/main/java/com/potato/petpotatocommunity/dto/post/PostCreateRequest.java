@@ -10,6 +10,8 @@ import lombok.*;
 public class PostCreateRequest {
 //    private Long userId;
     private String hashtagId;
+//    private String groupCodeId;  // ex: "300"
+//    private String codeId;       // ex: "001"
     private String title;
     private String content;
 }
