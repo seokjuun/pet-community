@@ -31,7 +31,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final CommonCodeRepository commonCodeRepository;
+    private final ExCommonCodeRepository exCommonCodeRepository;
     private final PostImageRepository postImageRepository;
     private final PostLikeRepository postLikeRepository;
 
@@ -41,7 +41,7 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findById(userDto.getUserId())
                 .orElseThrow(() -> new PostException("존재하지 않는 사용자입니다."));
 
-        CommonCode hashtag = commonCodeRepository.findById(request.getHashtagId())
+        CommonCode hashtag = exCommonCodeRepository.findById(request.getHashtagId())
                 .orElseThrow(() -> new PostException("존재하지 않는 해시태그입니다."));
 
         Post post = Post.builder()
@@ -145,7 +145,7 @@ public class PostServiceImpl implements PostService {
             throw new PostException("게시글을 수정할 권한이 없습니다.");
         }
 
-        CommonCode hashtag = commonCodeRepository.findById(request.getHashtagId())
+        CommonCode hashtag = exCommonCodeRepository.findById(request.getHashtagId())
                 .orElseThrow(() -> new PostException("존재하지 않는 해시태그입니다."));
 
         post.setTitle(request.getTitle());

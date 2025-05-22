@@ -6,7 +6,7 @@ import com.potato.petpotatocommunity.entity.CommonCode;
 import com.potato.petpotatocommunity.entity.Pet;
 import com.potato.petpotatocommunity.entity.User;
 import com.potato.petpotatocommunity.exception.NotFoundException;
-import com.potato.petpotatocommunity.repository.CommonCodeRepository;
+import com.potato.petpotatocommunity.repository.ExCommonCodeRepository;
 import com.potato.petpotatocommunity.repository.PetRepository;
 import com.potato.petpotatocommunity.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
-    private final CommonCodeRepository commonCodeRepository;
+    private final ExCommonCodeRepository exCommonCodeRepository;
 
     @Override
     public List<PetDto> getMyPet(Long userId) {
@@ -48,7 +48,7 @@ public class PetServiceImpl implements PetService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-        CommonCode breed = commonCodeRepository.findById(dto.getBreedId())
+        CommonCode breed = exCommonCodeRepository.findById(dto.getBreedId())
                 .orElseThrow(() -> new NotFoundException("해당 품종 코드가 존재하지 않습니다."));
 
         Pet newPet = Pet.builder()
@@ -82,7 +82,7 @@ public class PetServiceImpl implements PetService {
         Pet pet = petRepository.findByPetIdAndUser(petId, user)
                 .orElseThrow(() -> new NotFoundException("해당 반려동물을 찾을 수 없습니다."));
 
-        CommonCode breed = commonCodeRepository.findById(dto.getBreedId())
+        CommonCode breed = exCommonCodeRepository.findById(dto.getBreedId())
                 .orElseThrow(() -> new NotFoundException("해당 품종 코드가 존재하지 않습니다."));
 
         pet.setName(dto.getName());

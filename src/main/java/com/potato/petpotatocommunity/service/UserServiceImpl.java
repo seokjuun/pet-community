@@ -3,7 +3,6 @@ package com.potato.petpotatocommunity.service;
 import com.potato.petpotatocommunity.exception.PasswordException;
 import com.potato.petpotatocommunity.dto.user.UserDto;
 import com.potato.petpotatocommunity.dto.user.UserProfileDto;
-import com.potato.petpotatocommunity.entity.CommonCode;
 import com.potato.petpotatocommunity.entity.User;
 import com.potato.petpotatocommunity.repository.UserRepository;
 import com.potato.petpotatocommunity.repository.UserRoleRepository;
