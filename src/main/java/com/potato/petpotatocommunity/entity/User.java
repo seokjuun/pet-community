@@ -1,5 +1,6 @@
 package com.potato.petpotatocommunity.entity;
 
+import com.potato.petpotatocommunity.entity.key.CodeKey;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -34,9 +35,20 @@ public class User {
     @NotNull
     private String nickname;
 
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "groupCode", column = @Column(name = "group_code_id")),
+            @AttributeOverride(name = "code", column = @Column(name = "code_id"))
+    })
+    private CodeKey roleCodeKey;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
-    private CommonCode role;
+    @JoinColumns({
+            @JoinColumn(name = "group_code_id", referencedColumnName = "groupCode", insertable = false, updatable = false),
+            @JoinColumn(name = "code_id", referencedColumnName = "code", insertable = false, updatable = false)
+    })
+
+    private Code role;
 
     private String phone;
 

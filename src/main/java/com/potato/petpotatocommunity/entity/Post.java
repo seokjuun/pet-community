@@ -1,5 +1,6 @@
 package com.potato.petpotatocommunity.entity;
 
+import com.potato.petpotatocommunity.entity.key.CodeKey;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,6 +30,22 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
     private CommonCode hashtag;
+
+    // 복합 키 code 수정
+//    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "groupCode", column = @Column(name = "group_code_id")),
+//            @AttributeOverride(name = "code", column = @Column(name = "code_id"))
+//    })
+//    private CodeKey hashtagCodeKey;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumns({
+//            @JoinColumn(name = "group_code_id", referencedColumnName = "groupCode", insertable = false, updatable = false),
+//            @JoinColumn(name = "code_id", referencedColumnName = "code", insertable = false, updatable = false)
+//    })
+//
+//    private Code hashtagcode;
 
     @Column(nullable = false, length = 200)
     private String title;

@@ -4,6 +4,7 @@ import com.potato.petpotatocommunity.entity.key.CodeKey;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Entity
@@ -24,4 +25,15 @@ public class Code {
 
     @Column(name="is_active") // 1 활성화, 0 비활성화
     private int isActive;
+
+    @Transient
+    public String getGroupCode() {
+        return codeKey != null ? codeKey.getGroupCode() : null;
+    }
+
+    @Transient
+    public String getCode() {
+        return codeKey != null ? codeKey.getCode() : null;
+    }
+
 }
