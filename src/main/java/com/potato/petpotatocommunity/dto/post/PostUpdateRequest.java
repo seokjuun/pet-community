@@ -12,6 +12,7 @@ import java.util.List;
 public class PostUpdateRequest {
     private String title;
     private String content;
-    private String hashtagId;
+    private String groupCodeId;  // ex: "300"
+    private String codeId;       // ex: "001"
     private List<String> deletedImageUrls;
 }

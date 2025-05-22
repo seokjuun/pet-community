@@ -5,6 +5,7 @@ import com.potato.petpotatocommunity.dto.post.PostDetailResponse;
 import com.potato.petpotatocommunity.dto.post.PostResultDto;
 import com.potato.petpotatocommunity.dto.post.PostUpdateRequest;
 import com.potato.petpotatocommunity.entity.*;
+import com.potato.petpotatocommunity.entity.key.CodeKey;
 import com.potato.petpotatocommunity.exception.PostException;
 import com.potato.petpotatocommunity.repository.*;
 import jakarta.transaction.Transactional;
@@ -41,12 +42,13 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findById(userDto.getUserId())
                 .orElseThrow(() -> new PostException("존재하지 않는 사용자입니다."));
 
-        CommonCode hashtag = commonCodeRepository.findById(request.getHashtagId())
-                .orElseThrow(() -> new PostException("존재하지 않는 해시태그입니다."));
+        CodeKey codeKey = new CodeKey(request.getGroupCodeId(), request.getCodeId());
+        Code category = commonCodeRepository.findById(codeKey)
+                .orElseThrow(() -> new PostException("존재하지 않는 카테고리입니다."));
 
         Post post = Post.builder()
                 .user(user)
-                .hashtag(hashtag)
+                .category(category)
                 .title(request.getTitle())
                 .content(request.getContent())
                 .viewCount(0)
@@ -104,7 +106,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public PostResultDto getPost(Long postId, UserDto user) {
-        Post post = postRepository.findByIdWithUserAndHashtag(postId)
+        Post post = postRepository.findByIdWithUserAndCategory(postId)
                 .orElseThrow(() -> new PostException("존재하지 않는 게시글입니다."));
 
         List<PostImage> images = postImageRepository.findByPost_PostId(postId);
@@ -119,8 +121,9 @@ public class PostServiceImpl implements PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
-                .hashtagName(post.getHashtag().getCodeName())
-                .hashtagId(post.getHashtag().getCodeId())
+                .categoryName(post.getCategory() != null ? post.getCategory().getCodeName() : null)
+                .codeId(post.getCategory() != null ? post.getCategory().getCodeKey().getCode() : null)
+                .groupCodeId(post.getCategory() != null ? post.getCategory().getCodeKey().getGroupCode() : null)
                 .username(post.getUser().getUsername())
                 .userId(post.getUser().getUserId())
                 .createdAt(post.getCreatedAt())
@@ -145,12 +148,13 @@ public class PostServiceImpl implements PostService {
             throw new PostException("게시글을 수정할 권한이 없습니다.");
         }
 
-        CommonCode hashtag = commonCodeRepository.findById(request.getHashtagId())
-                .orElseThrow(() -> new PostException("존재하지 않는 해시태그입니다."));
+        CodeKey codeKey = new CodeKey(request.getGroupCodeId(), request.getCodeId());
+        Code category = commonCodeRepository.findById(codeKey)
+                .orElseThrow(() -> new PostException("존재하지 않는 카테고리입니다."));
 
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
-        post.setHashtag(hashtag);
+        post.setCategory(category);
 
         postRepository.save(post);
 
@@ -206,12 +210,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResultDto getPosts(int page, int size, String keyword, String hashtagId) {
+    public PostResultDto getPosts(int page, int size, String keyword, String codeId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Page<Post> posts;
-        if (hashtagId != null && !hashtagId.trim().isEmpty()) {
-            posts = postRepository.findByHashtag_CodeIdWithFetch(hashtagId, pageable);
+        if (codeId != null && !codeId.trim().isEmpty()) {
+            posts = postRepository.findByCategory_CodeKey_Code(codeId, pageable);
         } else if (keyword != null && !keyword.trim().isEmpty()) {
             posts = postRepository.searchByKeyword(keyword, pageable);
         } else {
@@ -223,7 +227,9 @@ public class PostServiceImpl implements PostService {
                 .postId(post.getPostId())
                 .title(post.getTitle())
 //                .content(post.getContent())
-                .hashtagName(post.getHashtag().getCodeName())
+                .categoryName(post.getCategory() != null ? post.getCategory().getCodeName() : null)
+                .codeId(post.getCategory() != null ? post.getCategory().getCodeKey().getCode() : null)
+                .groupCodeId(post.getCategory() != null ? post.getCategory().getCodeKey().getGroupCode() : null)
                 .username(post.getUser().getUsername())
                 .userId(post.getUser().getUserId())
                 .viewCount(post.getViewCount())
@@ -250,7 +256,7 @@ public class PostServiceImpl implements PostService {
         Page<Post> posts = postRepository.findPopularPostsInLast48Hours(pageable);
 
         posts.forEach(post -> {
-            if (post.getHashtag() != null) post.getHashtag().getCodeName();
+            if (post.getCategory() != null) post.getCategory().getCodeName();
             if (post.getUser() != null) post.getUser().getUsername();
         });
 
@@ -258,7 +264,9 @@ public class PostServiceImpl implements PostService {
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "Unknown")
+                .categoryName(post.getCategory() != null ? post.getCategory().getCodeName() : "Unknown")
+                .codeId(post.getCategory() != null ? post.getCategory().getCodeKey().getCode() : null)
+                .groupCodeId(post.getCategory() != null ? post.getCategory().getCodeKey().getGroupCode() : null)
                 .username(post.getUser() != null ? post.getUser().getUsername() : "Unknown")
                 .userId(post.getUser().getUserId())
                 .viewCount(post.getViewCount())
@@ -276,12 +284,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostResultDto getPopularPostsByHashtag(String hashtagId, int page, int size) {
+    public PostResultDto getPopularPostsByCategory(String codeId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Post> posts = postRepository.findPopularPostsByHashtagInLast48Hours(hashtagId, pageable);
+//        Page<Post> posts = postRepository.findPopularPostsByHashtagInLast48Hours(hashtagId, pageable);
+        Page<Post> posts = postRepository.findPopularPostsByCategoryCode(codeId, pageable);
 
         posts.forEach(post -> {
-            if (post.getHashtag() != null) post.getHashtag().getCodeName();
+            if (post.getCategory() != null) post.getCategory().getCodeName();
             if (post.getUser() != null) post.getUser().getUsername();
         });
 
@@ -289,7 +298,9 @@ public class PostServiceImpl implements PostService {
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "Unknown")
+                .categoryName(post.getCategory() != null ? post.getCategory().getCodeName() : "Unknown")
+                .codeId(post.getCategory() != null ? post.getCategory().getCodeKey().getCode() : null)
+                .groupCodeId(post.getCategory() != null ? post.getCategory().getCodeKey().getGroupCode() : null)
                 .username(post.getUser() != null ? post.getUser().getUsername() : "Unknown")
                 .userId(post.getUser().getUserId())
                 .viewCount(post.getViewCount())

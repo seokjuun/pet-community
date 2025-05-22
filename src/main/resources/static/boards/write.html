@@ -192,13 +192,13 @@
       <h2 id="form-title" style="margin-bottom: 20px;">글 작성</h2>
       <form id="postForm" enctype="multipart/form-data">
         <div class="form-group">
-          <label for="hashtagId">카테고리</label>
-          <select id="hashtagId" name="hashtagId" class="form-control" required>
+          <label for="codeId">카테고리</label>
+          <select id="codeId" name="codeId" class="form-control" required>
             <option value="">카테고리를 선택하세요</option>
-            <option value="CATEGORY_GENERAL">자유</option>
-            <option value="CATEGORY_GROOMING">미용</option>
-            <option value="CATEGORY_HOSPITAL">의료</option>
-            <option value="CATEGORY_WALK">산책</option>
+            <option value="001">자유</option>
+            <option value="002">미용</option>
+            <option value="005">의료</option>
+            <option value="004">산책</option>
           </select>
         </div>
         <div class="form-group">
@@ -370,7 +370,8 @@
   function initCreateForm() {
     document.getElementById('form-title').textContent = '글 작성';
     document.getElementById('postForm').reset();
-    document.getElementById('hashtagId').value = getBoardTypeFromUrl();
+    // Set default category if present in URL, else blank
+    document.getElementById('codeId').value = getBoardTypeFromUrl();
     formMode = 'create';
   }
 
@@ -382,7 +383,7 @@
   // 폼 초기화 (수정 모드)
   function initUpdateForm(post) {
     document.getElementById('form-title').textContent = '글 수정';
-    document.getElementById('hashtagId').value = post.hashtagId;
+    document.getElementById('codeId').value = post.codeId;
     document.getElementById('title').value = post.title;
     document.getElementById('content').value = post.content;
 
@@ -433,7 +434,8 @@
       showLoader();
 
       const postData = {
-        hashtagId: formData.get('hashtagId'),
+        codeId: formData.get('codeId'),
+        groupCodeId: "300",
         title: formData.get('title'),
         content: formData.get('content')
       };
@@ -465,7 +467,7 @@
       if (result.result === 'success') {
         alert('게시글이 등록되었습니다.');
         // 등록 후 게시판으로 이동 (선택된 카테고리 유지)
-        const category = document.getElementById('hashtagId').value || 'CATEGORY_GENERAL';
+        const category = document.getElementById('codeId').value || 'CATEGORY_GENERAL';
         window.location.href = `/boards/free.html?category=${category}`;
       } else {
         alert('게시글 등록에 실패했습니다.');
@@ -482,12 +484,6 @@
     try {
       showLoader();
 
-      // const postData = {
-      //   title: formData.get('title'),
-      //   content: formData.get('content'),
-      //   hashtagId: formData.get('hashtagId')
-      // };
-
       const images = getSelectedImages();
       if (images.length > 5) {
         alert('이미지는 최대 5장까지 업로드할 수 있습니다.');
@@ -495,11 +491,11 @@
       }
 
       const multipartForm = new FormData();
-      // multipartForm.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' }));
       const postData = {
         title: formData.get('title'),
         content: formData.get('content'),
-        hashtagId: formData.get('hashtagId'),
+        codeId: formData.get('codeId'),
+        groupCodeId: "300",
         deletedImageUrls: deletedExistingImages
       };
       multipartForm.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' }));

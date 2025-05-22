@@ -28,7 +28,7 @@ public class ActivityServiceImpl implements ActivityService {
                 .map(post -> PostListDto.builder()
                         .postId(post.getPostId())
                         .title(post.getTitle())
-                        .hashtagName(post.getHashtag() != null ? post.getHashtag().getCodeName() : "기타")
+                        .categoryName(post.getCategory() != null ? post.getCategory().getCodeName() : "기타")
                         .viewCount(post.getViewCount())
 //                        .likeCount(post.getLikeCount())
                         //.likeCount(post.getPostLikes() != null ? post.getPostLikes().size() : 0)

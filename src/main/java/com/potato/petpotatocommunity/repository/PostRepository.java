@@ -37,7 +37,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //    Optional<Post> findWithHashtagById(@Param("postId") Long postId);
 
     @Query("SELECT DISTINCT p FROM Post p " +
-            "LEFT JOIN FETCH p.hashtag " +
+            "LEFT JOIN FETCH p.category " +
             "LEFT JOIN FETCH p.comments " +
             "WHERE p.user.userId = :userId " +
             "ORDER BY p.createdAt DESC")
@@ -53,8 +53,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   
     //crud
     
-    @Query("SELECT p FROM Post p JOIN FETCH p.hashtag JOIN FETCH p.user WHERE p.postId = :postId")
-    Optional<Post> findByIdWithUserAndHashtag(@Param("postId") Long postId);
+    @Query("SELECT p FROM Post p JOIN FETCH p.category JOIN FETCH p.user WHERE p.postId = :postId")
+    Optional<Post> findByIdWithUserAndCategory(@Param("postId") Long postId);
 
     @EntityGraph(attributePaths = {"user", "hashtag"})
     @Query("""
@@ -65,7 +65,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     """)
     Page<Post> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"user", "hashtag"})
+    @EntityGraph(attributePaths = {"user", "category"})
     Page<Post> findAll(Pageable pageable);
 
     // 25-05-13 doyeon add ( 인기게시글 )
@@ -103,9 +103,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         SELECT p.*
         FROM posts p
         LEFT JOIN post_likes pl ON p.post_id = pl.post_id
-        JOIN common_codes c ON p.hashtag_id = c.code_id
         WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
-          AND c.code_id = :hashtagId
+          AND p.code_id = :codeId AND p.group_code_id = '300'
         GROUP BY p.post_id
         ORDER BY COUNT(pl.post_id) DESC, p.created_at DESC
         """,
@@ -114,18 +113,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             SELECT p.post_id
             FROM posts p
             LEFT JOIN post_likes pl ON p.post_id = pl.post_id
-            JOIN common_codes c ON p.hashtag_id = c.code_id
             WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
-              AND c.code_id = :hashtagId
+              AND p.code_id = :codeId AND p.group_code_id = '300'
             GROUP BY p.post_id
         ) AS count_sub
         """,
             nativeQuery = true)
-    Page<Post> findPopularPostsByHashtagInLast48Hours(@Param("hashtagId") String hashtagId, Pageable pageable);
+    Page<Post> findPopularPostsByCategoryCode(@Param("codeId") String codeId, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"user", "hashtag"})
-    @Query("SELECT p FROM Post p JOIN FETCH p.hashtag h WHERE h.codeId = :hashtagId ORDER BY p.createdAt DESC")
-    Page<Post> findByHashtag_CodeIdWithFetch(@Param("hashtagId") String hashtagId, Pageable pageable);
+    @EntityGraph(attributePaths = {"user", "category"})
+    Page<Post> findByCategory_CodeKey_Code(String codeId, Pageable pageable);
+
 //    @EntityGraph(attributePaths = {"user", "hashtag", "postLikes"})
 //    @Query(value = """
 //        SELECT p

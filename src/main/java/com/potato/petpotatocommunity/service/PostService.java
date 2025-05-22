@@ -23,11 +23,11 @@ public interface PostService {
     PostResultDto getPost(Long postId, UserDto userDto);
     PostResultDto updatePost(Long postId, PostUpdateRequest request, List<MultipartFile> images,UserDto userDto);
     PostResultDto deletePost(Long postId, UserDto userDto);
-    PostResultDto getPosts(int page, int size, String keyword, String hashtagId);
+    PostResultDto getPosts(int page, int size, String keyword, String codeId);
 //    Page<PostDetailResponse> getPosts(int page, int size, String keyword);
 
     // 25-05-13 doyoen add
 //    List<Post> getPopularPosts(int limit);
     PostResultDto getPopularPosts(int page, int size);
-    PostResultDto getPopularPostsByHashtag(String hashtagId, int page, int size);
+    PostResultDto getPopularPostsByCategory(String codeId, int page, int size);
 }

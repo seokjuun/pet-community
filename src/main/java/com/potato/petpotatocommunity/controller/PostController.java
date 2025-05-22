@@ -71,9 +71,9 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String hashtagId
+            @RequestParam(required = false) String codeId
     ) {
-        return ResponseEntity.ok(postService.getPosts(page, size, keyword, hashtagId));
+        return ResponseEntity.ok(postService.getPosts(page, size, keyword, codeId));
     }
 
     @PostMapping("/{postId}/like")
@@ -100,13 +100,13 @@ public class PostController {
         return ResponseEntity.ok(postService.getPopularPosts(page, size));
     }
 
-    @GetMapping("/popular/hashtag/{hashtagId}")
-    public ResponseEntity<PostResultDto> getPopularPostsByHashtag(
-            @PathVariable String hashtagId,
+    @GetMapping("/popular/category/{codeId}")
+    public ResponseEntity<PostResultDto> getPopularPostsByCategory(
+            @PathVariable String codeId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size
     ) {
-        return ResponseEntity.ok(postService.getPopularPostsByHashtag(hashtagId, page, size));
+        return ResponseEntity.ok(postService.getPopularPostsByCategory(codeId, page, size));
     }
 
 }

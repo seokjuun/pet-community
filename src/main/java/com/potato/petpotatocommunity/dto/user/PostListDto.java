@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class PostListDto {
     private Long postId;         // 게시글 ID
     private String title;        // 게시글 제목
-    private String hashtagName;  // 게시글 카테고리(해시태그)
+    private String categoryName; // 게시글 카테고리(해시태그)
     private int viewCount;       // 조회수
     private int likeCount;       // 좋아요 수
     private int commentCount;    // 댓글 수

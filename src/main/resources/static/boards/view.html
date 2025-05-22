@@ -470,8 +470,8 @@
                     likeButton.querySelector('i').classList.add('far');
                 }
                 const hashtagEl = document.getElementById('postHashtag');
-                hashtagEl.textContent = post.hashtagName;
-                hashtagEl.classList.add(getTagClass(post.hashtagName));
+                hashtagEl.textContent = post.categoryName;
+                hashtagEl.classList.add(getTagClass(post.categoryName));
 
                 function getTagClass(name) {
                     switch (name) {

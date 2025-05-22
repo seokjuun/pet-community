@@ -15,8 +15,9 @@ public class PostDetailResponse {
     private String title;
     private String content;
     private int viewCount;
-    private String hashtagName;
-    private String hashtagId;
+    private String categoryName;
+    private String codeId;
+    private String groupCodeId;
     private String username;
     private Long userId;
     private LocalDateTime createdAt;

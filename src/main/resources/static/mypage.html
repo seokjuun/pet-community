@@ -693,7 +693,10 @@
                                     <div class="form-col">
                                         <div class="form-group">
                                             <label for="petBreed">견/묘종 (코드)</label>
-                                            <input type="text" id="petBreed" name="petBreed" class="form-control" required>
+<!--                                            <input type="text" id="petBreed" name="petBreed" class="form-control" required>-->
+                                            <select id="petBreed" name="petBreed" class="form-control" required>
+                                                <!-- 옵션은 JS로 동적으로 채울 예정 -->
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -750,6 +753,9 @@
 
         // 사용자 정보 가져오기
         fetchUserInfo();
+
+        // 반려동물 종 옵션 가져오기
+        loadBreedOptions();
 
         // 현재 활성 탭이 '활동 내역'인 경우 데이터 로드
         const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
@@ -978,6 +984,25 @@
                 errorMsg.style.display = 'block';
             });
     });
+    // 반려동물 종 정보 불러오기
+    function loadBreedOptions() {
+        fetch('/mypage/breeds')
+            .then(res => res.json())
+            .then(result => {
+                if (result.result === 'success' && Array.isArray(result.data)) {
+                    const select = document.getElementById('petBreed');
+                    select.innerHTML = '';
+                    result.data.forEach(breed => {
+                        const option = document.createElement('option');
+                        option.value = `${breed.groupCode}|${breed.code}`; // ← 중요
+                        option.textContent = breed.codeName;
+                        select.appendChild(option);
+                    });
+                }
+            })
+            .catch(err => console.error('견종 불러오기 실패:', err));
+    }
+
 
     // 반려동물 등록 수정 이벤트 처리
     document.getElementById('petForm').addEventListener('submit', function(e) {
@@ -986,9 +1011,18 @@
         const mode = e.target.dataset.mode || 'create';
         const petId = e.target.dataset.petId;
 
+        // const pet = {
+        //     name: document.getElementById('petName').value,
+        //     breedId: document.getElementById('petBreed').value,
+        //     birthday: document.getElementById('petBirthday').value,
+        //     petImage: document.getElementById('petImage').value,
+        //     info: document.getElementById('petInfo').value
+        // };
+        const [groupCodeId, codeId] = document.getElementById('petBreed').value.split('|');
         const pet = {
             name: document.getElementById('petName').value,
-            breedId: document.getElementById('petBreed').value,
+            groupCodeId,
+            codeId,
             birthday: document.getElementById('petBirthday').value,
             petImage: document.getElementById('petImage').value,
             info: document.getElementById('petInfo').value
@@ -1156,7 +1190,8 @@
                     const pet = result.data.find(p => p.petId === petId);
                     if (pet) {
                         document.getElementById('petName').value = pet.name;
-                        document.getElementById('petBreed').value = pet.breedName; // breedId로 바꿔도 됨
+                        // document.getElementById('petBreed').value = pet.breedId; // breedId로 바꿔도 됨
+                        document.getElementById('petBreed').value = `${pet.groupCodeId}|${pet.codeId}`;
                         document.getElementById('petBirthday').value = pet.birthday || '';
                         document.getElementById('petImage').value = pet.petImage || '';
                         document.getElementById('petInfo').value = pet.info || '';

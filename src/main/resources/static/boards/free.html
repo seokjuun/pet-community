@@ -289,10 +289,10 @@
         <div class="btn-group filter-buttons mb-3" role="group">
             <button class="btn btn-outline-primary" data-category="POPULAR">🔥인기글</button>
             <button class="btn btn-outline-primary" data-category="ALL">전체</button>
-            <button class="btn btn-outline-primary" data-category="CATEGORY_GENERAL">자유</button>
-            <button class="btn btn-outline-primary" data-category="CATEGORY_GROOMING">미용</button>
-            <button class="btn btn-outline-primary" data-category="CATEGORY_HOSPITAL">의료</button>
-            <button class="btn btn-outline-primary" data-category="CATEGORY_WALK">산책</button>
+            <button class="btn btn-outline-primary" data-category="001">자유</button>
+            <button class="btn btn-outline-primary" data-category="002">미용</button>
+            <button class="btn btn-outline-primary" data-category="005">의료</button>
+            <button class="btn btn-outline-primary" data-category="004">산책</button>
         </div>
         <br>
         <div class="post-list">
@@ -377,7 +377,7 @@
         } else {
             url = `/api/posts?page=${page}&size=${size}`;
             if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
-            if (currentCategory !== 'ALL') url += `&hashtagId=${currentCategory}`;
+            if (currentCategory !== 'ALL') url += `&codeId=${currentCategory}`;
         }
 
         const response = await fetch(url);
@@ -397,7 +397,7 @@
             el.innerHTML = `
                 <div class="post-num">${post.postId}</div>
                 <div>
-                    <span class="post-tag ${getTagClass(post.hashtagName)}">${post.hashtagName}</span>
+                    <span class="post-tag ${getTagClass(post.categoryName)}">${post.categoryName}</span>
                     <a href="/boards/view.html?id=${post.postId}" class="post-title">${post.title}</a>
                 </div>
                 <div class="post-author">${post.username}</div>

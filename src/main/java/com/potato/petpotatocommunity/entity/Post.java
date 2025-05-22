@@ -1,5 +1,6 @@
 package com.potato.petpotatocommunity.entity;
 
+import com.potato.petpotatocommunity.entity.key.CodeKey;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,9 +27,16 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "hashtag_id")
+//    private CommonCode hashtag;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hashtag_id")
-    private CommonCode hashtag;
+    @JoinColumns({
+            @JoinColumn(name = "group_code_id", referencedColumnName = "groupCode"),
+            @JoinColumn(name = "code_id", referencedColumnName = "code")
+    })
+    private Code category;
 
     @Column(nullable = false, length = 200)
     private String title;
@@ -37,8 +45,6 @@ public class Post {
     private String content;
 
     private int viewCount;
-
-//    private int likeCount;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
